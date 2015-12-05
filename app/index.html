@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head ng-app="myApp" ng-controller="CartController">
+    <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+    <meta name="description" content="HTML5 Audio Streamer for Subsonic, Archive.org browsing and streaming">
+    <meta name="keywords" content="Subsonic, Archive.org, Live Music Archive, HTML5 Audio, Music Streaming, Live Music">
+    <meta property="og:image" content="http://jamstash.com/images/fbpreview.png"/>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <title>Jamstash</title>
+    <link href="images/favicon_32x32.ico" rel="shortcut icon" />
+    <link rel="icon" href="images/favicon_48x48.png" sizes="48x48"/>
+    <link rel="icon" href="images/favicon_32x32.png" sizes="32x32"/>
+    <!-- build:css(.) styles/vendor.min.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!--
+    <link href="styles/Style.css" rel="stylesheet" type="text/css" data-name="main" />
+    <link href="styles/Mobile.css" rel="stylesheet" type="text/css" data-name="main" />
+    -->
+    <!-- build:css(app) styles/concat.min.css 
+    <link rel="stylesheet" href="player/player.css" />
+    -->
+    <!-- endbuild -->
+</head>
+<body>
+    <!-- build:js({.,app}) scripts/vendor.min.js -->
+    <!-- bower:js -->
+    <script src="bower_components/angular/angular.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- our scripts -->
+    <!-- build:js(app) scripts/scripts.min.js -->
+    <script src="src/ngCart.directives.js"></script>
+    <script src="src/ngCart.fulfilment.js"></script>
+    <script src="src/ngCart.js"></script>
+    <!-- endbuild -->
+    <script>
+        var myApp = angular.module('myApp', ['ngCart']);
+    </script>
+</body>
+</html>
+
