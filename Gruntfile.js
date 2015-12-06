@@ -290,22 +290,21 @@ module.exports = function (grunt) {
         'htmlmin'
     ]);
     grunt.registerTask('deploy', [
-        'clean:dist',
-        'clean:www',
-        'wiredep:app',
-        'copy:svg',
-        'useminPrepare',
-        'concat:generated',
-        'copy:dist',
-        'imagemin',
-        //'ngAnnotate',
-        'cssmin',
-        'uglify:generated',
-        'filerev',
-        'usemin',
-        'htmlmin',
+        'build',
         'copy:www',
     ]);
+    grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
+      if (target === 'dist') {
+        return grunt.task.run(['build', 'connect:dist:keepalive']);
+      }
+
+      grunt.task.run([
+          'wiredep',
+          'karma:continuous',
+          'connect:livereload',
+          'watch'
+        ]);
+    });
     grunt.registerTask('devmode', ['karma:unit', 'watch']);
     grunt.registerTask('testunit', ['karma:unit']);
     grunt.registerTask('test', ['karma:travis']);
