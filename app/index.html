@@ -12,7 +12,7 @@
     <link rel="icon" href="images/favicon_32x32.png" sizes="32x32"/>
     <!-- build:css(.) styles/vendor.min.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap-css-only/css/bootstrap.min.css" / >
+    <link rel="stylesheet" href="bower_components/bootstrap-css-only/css/bootstrap.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(app) styles/concat.min.css -->
@@ -20,8 +20,8 @@
     <!-- endbuild -->
 </head>
 <body>
-    <div ng-controller="myCtrl">
-
+    <div ng-app="myApp" ng-controller="myCtrl as main">
+    <h1>{{main.title}}</h1>
         <div class="row">
           
             <div class="col-xs-offset-8 col-xs-4">
@@ -91,6 +91,7 @@
     <!-- build:js({.,app}) scripts/vendor.min.js -->
     <!-- bower:js -->
     <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/ngCart/dist/ngCart.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <!-- our scripts -->
@@ -103,7 +104,9 @@
         var myApp = angular.module('myApp', ['ngCart']);
         myApp.controller ('myCtrl', ['$scope', '$http', 'ngCart', function($scope, $http, ngCart) {
             ngCart.setTaxRate(7.5);
-            ngCart.setShipping(2.99);    
+            ngCart.setShipping(2.99);
+            var vm = this;
+            vm.title = "HelloWorld!"
         }]);
     </script>
 </body>
