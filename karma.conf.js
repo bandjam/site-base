@@ -1,7 +1,7 @@
 module.exports = function (config) {
     config.set({
 
-        basePath: './',
+        basepath: './',
 
         files: [
             'bower_components/angular/angular.js',
@@ -9,11 +9,11 @@ module.exports = function (config) {
             'src/**/*.js'
         ],
 
-        autoWatch: false,
+        autowatch: false,
 
         frameworks: ['jasmine'],
 
-        browsers: ['Chrome'],
+        browsers: ['chrome'],
 
         plugins: [
             'karma-junit-reporter',
@@ -23,8 +23,8 @@ module.exports = function (config) {
             'karma-jasmine'
         ],
 
-        junitReporter: {
-            outputFile: 'test_out/unit.xml',
+        junitreporter: {
+            outputfile: 'test_out/unit.xml',
             suite: 'unit'
         }
 

@@ -38,12 +38,12 @@ module.exports = function (grunt) {
             once: {
                 configFile: 'karma.conf.js',
                 singleRun: true
-            },
-            travis: {
-                configFile: 'karma.conf.js',
-                singleRun: true,
-                browsers: ['PhantomJS']
             }
+            //,travis: {
+            //    configFile: 'karma.conf.js',
+            //    singleRun: true,
+            //    browsers: ['PhantomJS']
+            //}
         },
 
         watch: {
@@ -319,7 +319,7 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('devmode', ['karma:unit', 'watch']);
     grunt.registerTask('testunit', ['karma:unit']);
-    grunt.registerTask('test', ['karma:travis']);
+    //grunt.registerTask('test', ['karma:travis']);
 
 
     grunt.registerTask('default', ['test', 'build']);
