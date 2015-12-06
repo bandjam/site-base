@@ -21,7 +21,7 @@
 </head>
 <body>
     <div ng-app="myApp" ng-controller="myCtrl as main">
-    <nav  class="navbar navbar-inverse navbar-fixed-top">
+    <nav headroom class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -133,7 +133,7 @@
     <!-- endbuild -->
     <script>
         var myApp = angular.module('myApp', ['ngCart', 'headroom']);
-        myApp.controller ('myCtrl', ['$scope', '$http', 'ngCart', 'headroom', function($scope, $http, ngCart) {
+        myApp.controller ('myCtrl', ['$scope', '$http', 'ngCart', function($scope, $http, ngCart) {
             ngCart.setTaxRate(7.5);
             ngCart.setShipping(2.99);
             var vm = this;
