@@ -256,7 +256,7 @@ module.exports = function (grunt) {
           api: {
               options: { force: true },
               expand: true,
-              cwd: '<%= yeoman.dist %>/api',
+              cwd: 'api',
               dest: '<%= yeoman.api %>',
               src: ['**']
           }
@@ -300,6 +300,10 @@ module.exports = function (grunt) {
     grunt.registerTask('deploy', [
         'build',
         'copy:www'
+    ]);
+    grunt.registerTask('deployapi', [
+        'build',
+        'copy:api'
     ]);
     grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
       if (target === 'dist') {
