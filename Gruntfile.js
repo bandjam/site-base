@@ -18,7 +18,8 @@ module.exports = function (grunt) {
     // Configurable paths for the application
     var appConfig = {
         app: require('./bower.json').appPath || 'app',
-        dist: 'dist'
+        dist: 'dist',
+        webroot: '/var/www/html/ngcart'
     };
 
     grunt.initConfig({
@@ -188,6 +189,13 @@ module.exports = function (grunt) {
                 dot: true,
                 src: ['./coverage']
             }]
+          },
+          www: {
+            options: { force: true },
+            files: [{
+                dot: true,
+                src: ['<%= yeoman.webroot %>/{,*/}*']
+            }]
           }
         },
 
@@ -235,6 +243,13 @@ module.exports = function (grunt) {
               src: ['bower_components/open-iconic/sprite/sprite.svg'],
               dest: '<%= yeoman.app %>/images/sprite/iconic.svg'
             }]
+          },
+          www: {
+              options: { force: true },
+              expand: true,
+              cwd: '<%= yeoman.dist %>',
+              dest: '<%= yeoman.webroot %>',
+              src: ['**']
           }
         },
 
@@ -259,20 +274,37 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-karma');
 
     grunt.registerTask('build', [
-            'clean:dist',
-            'wiredep:app',
-            'copy:svg',
-            'useminPrepare',
-            'concat:generated',
-            'copy:dist',
-            'imagemin',
-            //'ngAnnotate',
-            'cssmin',
-            'uglify:generated',
-            'filerev',
-            'usemin',
-            'htmlmin'
-        ]);
+        'clean:dist',
+        'wiredep:app',
+        'copy:svg',
+        'useminPrepare',
+        'concat:generated',
+        'copy:dist',
+        'imagemin',
+        //'ngAnnotate',
+        'cssmin',
+        'uglify:generated',
+        'filerev',
+        'usemin',
+        'htmlmin'
+    ]);
+    grunt.registerTask('deploy', [
+        'clean:dist',
+        'clean:www',
+        'wiredep:app',
+        'copy:svg',
+        'useminPrepare',
+        'concat:generated',
+        'copy:dist',
+        'imagemin',
+        //'ngAnnotate',
+        'cssmin',
+        'uglify:generated',
+        'filerev',
+        'usemin',
+        'htmlmin',
+        'copy:www',
+    ]);
     grunt.registerTask('devmode', ['karma:unit', 'watch']);
     grunt.registerTask('testunit', ['karma:unit']);
     grunt.registerTask('test', ['karma:travis']);
