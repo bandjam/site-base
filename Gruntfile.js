@@ -23,6 +23,10 @@ module.exports = function (grunt) {
         api: '/var/www/html/api'
     };
 
+    // Paths to ssh config & private key
+    var sshConfigFile = '.ssh/testServer.json';
+    var sshKeyFile = '.ssh/test-server-key/';
+
     grunt.initConfig({
 
         pkg: grunt.file.readJSON('package.json'),
@@ -30,20 +34,97 @@ module.exports = function (grunt) {
         // Project settings
         yeoman: appConfig,
 
-        karma: {
-            unit: {
-                configFile: 'karma.conf.js',
-                background: true
-            },
-            once: {
-                configFile: 'karma.conf.js',
-                singleRun: true
+        // Watches files for changes and runs tasks based on the changed files
+        watch: {
+          bower: {
+            files: ['bower.json'],
+            tasks: ['wiredep', 'copy:svg']
+          },
+          js: {
+            files: ['<%= yeoman.app %>/**/*.js', '!<%= yeoman.app %>/**/*_test.js'],
+            tasks: ['karma:continuous:run'],
+            options: {
+              livereload: '<%= connect.options.livereload %>'
             }
-            //,travis: {
-            //    configFile: 'karma.conf.js',
-            //    singleRun: true,
-            //    browsers: ['PhantomJS']
-            //}
+          },
+          jsTest: {
+            files: ['<%= yeoman.app %>/**/*_test.js'],
+            tasks: ['karma:continuous:run']
+          },
+          svg: {
+            files: ['<%= yeoman.app %>/images/**/*.svg', '!<%= yeoman.app %>/images/sprite/**'],
+            tasks: ['svg_sprite:dist']
+          },
+          gruntfile: {
+            files: ['Gruntfile.js']
+          },
+          livereload: {
+            files: [
+              '<%= yeoman.app %>/**/*.html',
+              '<%= yeoman.app %>/**/*.css',
+              '<%= yeoman.app %>/styles/{,*/}*.css',
+              '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+            ]
+          },
+          options: {
+            livereload: '<%= connect.options.livereload %>'
+          }
+        },
+
+        // The actual grunt server settings
+        connect: {
+          options: {
+            port: 9000,
+            // Change this to '0.0.0.0' to access the server from outside.
+            hostname: 'localhost',
+            livereload: 35729
+          },
+          livereload: {
+            options: {
+              open: true,
+              middleware: function (connect) {
+                return [
+                  connect().use(
+                    '/bower_components',
+                    connect.static('./bower_components')
+                  ),
+                  connect.static(appConfig.app)
+                ];
+              }
+            }
+          },
+          coverage: {
+            options: {
+              open: true,
+              port: 9003,
+              keepalive: true,
+              base: './coverage/'
+            }
+          },
+          dist: {
+            options: {
+              port: 9002,
+              open: true,
+              base: '<%= yeoman.dist %>'
+            }
+          }
+        },
+
+        karma: {
+            options: {
+              configFile: './karma.conf.js'
+            },
+            unit: {
+              singleRun: true,
+              browsers: ['Chrome'],
+              reporters: ['notify', 'coverage']
+            },
+            continuous: {
+              singleRun: false,
+              background: true,
+              browsers: ['Chrome'],
+              reporters: ['progress', 'notify']
+            }
         },
 
         watch: {
@@ -256,6 +337,7 @@ module.exports = function (grunt) {
           api: {
               options: { force: true },
               expand: true,
+              dot: true,
               cwd: 'api',
               dest: '<%= yeoman.api %>',
               src: ['**']
@@ -269,6 +351,46 @@ module.exports = function (grunt) {
             commit: false,
             createTag: false,
             push: false
+          }
+        },
+
+        // SSH files used to clean and deploy using sftp on a test server.
+        // Be sure to .gitignore the .ssh/ folder !
+        // testServer should contain :
+        // {
+        //    "host": 'my-test-server.com',
+        //    "username": 'my-username-on-this-server',
+        //    "password": 'include-only-if-not-using-private-key-below'
+        // }
+        sshconfig: {
+          testServer: grunt.file.exists(sshConfigFile) ? grunt.file.readJSON('.ssh/testServer.json') : null
+        },
+        // This is the private key for the username on the host defined in testServer.json
+        testServerKey: grunt.file.exists(sshKeyFile) ? grunt.file.read('.ssh/test-server-key') : null,
+        // Removes everything at the deploy location to avoid filling up the server with revved files.
+        sshexec: {
+          cleanTest: {
+            command: 'rm -rf /var/www/jamstash/*',
+            options: {
+              config: 'testServer',
+              privateKey: '<%= testServerKey %>'
+            }
+          }
+        },
+        // Deploy with sftp to the test server
+        sftp: {
+          test: {
+            files: {
+              './': ['<%= yeoman.dist %>/**/*', '<%= yeoman.dist %>/.git*']
+            },
+            options: {
+              path: '/var/www/jamstash',
+              srcBasePath: "dist/",
+              config: 'testServer',
+              privateKey: '<%= testServerKey %>',
+              showProgress: true,
+              createDirectories: true
+            }
           }
         }
 
@@ -305,6 +427,11 @@ module.exports = function (grunt) {
         'build',
         'copy:api'
     ]);
+    grunt.registerTask('deployall', [
+        'build',
+        'copy:www',
+        'copy:api'
+    ]);
     grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
       if (target === 'dist') {
         return grunt.task.run(['build', 'connect:dist:keepalive']);
@@ -319,7 +446,6 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('devmode', ['karma:unit', 'watch']);
     grunt.registerTask('testunit', ['karma:unit']);
-    //grunt.registerTask('test', ['karma:travis']);
 
 
     grunt.registerTask('default', ['test', 'build']);

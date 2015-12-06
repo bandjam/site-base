@@ -1,0 +1,176 @@
+/**
+* jamstash.subsonic.service Module
+*
+* Provides access through $http to the Subsonic server's API.
+* Also offers more fine-grained functionality that is not part of Subsonic's API.
+*/
+angular.module('jamstash.subsonic.service', [
+    'ngLodash',
+    'jamstash.settings.service',
+    'jamstash.model'
+])
+
+.service('subsonic', subsonicService);
+
+subsonicService.$inject = [
+    '$http',
+    '$q',
+    'lodash',
+    'globals',
+    'map'
+];
+
+function subsonicService(
+    $http,
+    $q,
+    _,
+    globals,
+    map
+) {
+    'use strict';
+
+    var self = this;
+    _.extend(self, {
+        addToPlaylist        : addToPlaylist,
+        deletePlaylist       : deletePlaylist,
+        getAlbumByTag        : getAlbumByTag,
+        getAlbumListBy       : getAlbumListBy,
+        getArtists           : getArtists,
+        getGenres            : getGenres,
+        getMusicFolders      : getMusicFolders,
+        getPlaylist          : getPlaylist,
+        getPlaylists         : getPlaylists,
+        getPodcast           : getPodcast,
+        getPodcasts          : getPodcasts,
+        getRandomSongs       : getRandomSongs,
+        getRandomStarredSongs: getRandomStarredSongs,
+        getDirectory         : getDirectory,
+        getStarred           : getStarred,
+        newPlaylist          : newPlaylist,
+        ping                 : ping,
+        recursiveGetDirectory: recursiveGetDirectory,
+        savePlaylist         : savePlaylist,
+        scrobble             : scrobble,
+        search               : search,
+        subsonicRequest      : subsonicRequest,
+        toggleStar           : toggleStar
+    });
+
+    // TODO: Hyz: Remove when refactored
+    var content = {
+        album: [],
+        song: [],
+        playlists: [],
+        breadcrumb: [],
+        playlistsPublic: [],
+        playlistsGenre: globals.SavedGenres,
+        selectedAutoAlbum: null,
+        selectedArtist: null,
+        selectedAlbum: null,
+        selectedPlaylist: null,
+        selectedAutoPlaylist: null,
+        selectedGenre: null,
+        selectedPodcast: null
+    };
+
+    /**
+     * Handles building the URL with the correct parameters and error-handling while communicating with
+     * a Subsonic server
+     * @param  {String} partialUrl the last part of the Subsonic URL you want, e.g. 'getStarred.view'. If it does not start with a '/', it will be prefixed
+     * @param  {Object} config     optional $http config object. The base settings expected by Subsonic (username, password, etc.) will be overwritten.
+     * @return {Promise}           a Promise that will be resolved if we receive the 'ok' status from Subsonic. Will be rejected otherwise with an object : {'reason': a message that can be displayed to a user, 'httpError': the HTTP error code, 'subsonicError': the error Object sent by Subsonic}
+     */
+    function subsonicRequest(partialUrl, config) {
+        var exception = { reason: 'Error when contacting the Subsonic server.' };
+        var deferred = $q.defer();
+        var actualUrl = (partialUrl.charAt(0) === '/') ? partialUrl : '/' + partialUrl;
+        var url = globals.BaseURL() + actualUrl;
+
+        // Extend the provided config (if it exists) with our params
+        // Otherwise we create a config object
+        var actualConfig = config || {};
+        actualConfig.params = actualConfig.params || {};
+        _.extend(actualConfig.params,  {
+            u: globals.settings.Username,
+            p: globals.settings.Password,
+            f: globals.settings.Protocol,
+            v: globals.settings.ApiVersion,
+            c: globals.settings.ApplicationName
+        });
+        actualConfig.timeout = globals.settings.Timeout;
+
+        var httpPromise;
+        if (globals.settings.Protocol === 'jsonp') {
+            actualConfig.params.callback = 'JSON_CALLBACK';
+            httpPromise = $http.jsonp(url, actualConfig);
+        } else {
+            httpPromise = $http.get(url, actualConfig);
+        }
+        httpPromise.success(function (data) {
+            var subsonicResponse = (data['subsonic-response'] !== undefined) ? data['subsonic-response'] : { status: 'failed' };
+            if (subsonicResponse.status === 'ok') {
+                deferred.resolve(subsonicResponse);
+            } else {
+                if (subsonicResponse.status === 'failed' && subsonicResponse.error !== undefined) {
+                    exception.subsonicError = subsonicResponse.error;
+                    exception.version = subsonicResponse.version;
+                }
+                deferred.reject(exception);
+            }
+        }).error(function (data, status) {
+            exception.httpError = status;
+            deferred.reject(exception);
+        });
+        return deferred.promise;
+    }
+
+    function ping() {
+        return self.subsonicRequest('ping.view');
+    }
+
+    function getMusicFolders() {
+        var exception = { reason: 'No music folder found on the Subsonic server.' };
+        var promise = self.subsonicRequest('getMusicFolders.view', {
+            cache: true
+        }).then(function (subsonicResponse) {
+            if (subsonicResponse.musicFolders !== undefined && subsonicResponse.musicFolders.musicFolder !== undefined) {
+                return [].concat(subsonicResponse.musicFolders.musicFolder);
+            } else {
+                return $q.reject(exception);
+            }
+        });
+        return promise;
+    }
+
+    function getArtists(folder) {
+        var exception = { reason: 'No artist found on the Subsonic server.' };
+        var params;
+        if (! isNaN(folder)) {
+            params = {
+                musicFolderId: folder
+            };
+        }
+        var promise = self.subsonicRequest('getIndexes.view', {
+            cache: true,
+            params: params
+        }).then(function (subsonicResponse) {
+            if (subsonicResponse.indexes !== undefined && (subsonicResponse.indexes.index !== undefined || subsonicResponse.indexes.shortcut !== undefined)) {
+                // Make sure shortcut, index and each index's artist are arrays
+                // because Madsonic will return an object when there's only one element
+                var formattedResponse = {};
+                formattedResponse.shortcut = [].concat(subsonicResponse.indexes.shortcut);
+                formattedResponse.index = [].concat(subsonicResponse.indexes.index);
+                _.map(formattedResponse.index, function (index) {
+                    var formattedIndex = index;
+                    formattedIndex.artist = [].concat(index.artist);
+                    return formattedIndex;
+                });
+                return formattedResponse;
+            } else {
+                return $q.reject(exception);
+            }
+        });
+        return promise;
+    }
+
+}

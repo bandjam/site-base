@@ -1,6 +1,6 @@
 'use strict';
 
-var myApp = angular.module('myApp', [
+var app = angular.module('app', [
     'ngRoute',
     'ngCart',
     'headroom'
@@ -11,7 +11,7 @@ var myApp = angular.module('myApp', [
         .when('/login', { templateUrl: 'template/login.html', controller: 'myCtrl' })
 }]);
 
-myApp.controller ('myCtrl', ['$scope', '$http', 'ngCart', function($scope, $http, ngCart) {
+app.controller ('myCtrl', ['$scope', '$http', 'ngCart', function($scope, $http, ngCart) {
     ngCart.setTaxRate(7.5);
     ngCart.setShipping(2.99);
     var vm = this;
