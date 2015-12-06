@@ -19,7 +19,8 @@ module.exports = function (grunt) {
     var appConfig = {
         app: require('./bower.json').appPath || 'app',
         dist: 'dist',
-        webroot: '/var/www/html/ngcart'
+        webroot: '/var/www/html/ngcart',
+        api: '/var/www/html/api'
     };
 
     grunt.initConfig({
@@ -251,6 +252,13 @@ module.exports = function (grunt) {
               cwd: '<%= yeoman.dist %>',
               dest: '<%= yeoman.webroot %>',
               src: ['**']
+          },
+          api: {
+              options: { force: true },
+              expand: true,
+              cwd: '<%= yeoman.dist %>/api',
+              dest: '<%= yeoman.api %>',
+              src: ['**']
           }
         },
 
@@ -291,7 +299,7 @@ module.exports = function (grunt) {
     ]);
     grunt.registerTask('deploy', [
         'build',
-        'copy:www',
+        'copy:www'
     ]);
     grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
       if (target === 'dist') {
