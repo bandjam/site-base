@@ -49,6 +49,7 @@
         <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
       </div>
 
+      <div ng-view></div>
     </div><!-- /.container -->
         <div class="row">
           
@@ -119,6 +120,7 @@
     <!-- build:js({.,app}) scripts/vendor.min.js -->
     <!-- bower:js -->
     <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/ngCart/dist/ngCart.js"></script>
     <script src="bower_components/headroom.js/dist/headroom.js"></script>
     <script src="bower_components/headroom.js/dist/jQuery.headroom.js"></script>
@@ -130,16 +132,9 @@
     <script src="src/ngCart.js"></script>
     <script src="src/ngCart.fulfilment.js"></script>
     <script src="src/ngCart.directives.js"></script>
+    <script src="app.js"></script>
     <!-- endbuild -->
-    <script>
-        var myApp = angular.module('myApp', ['ngCart', 'headroom']);
-        myApp.controller ('myCtrl', ['$scope', '$http', 'ngCart', function($scope, $http, ngCart) {
-            ngCart.setTaxRate(7.5);
-            ngCart.setShipping(2.99);
-            var vm = this;
-            vm.title = "HelloWorld!"
-        }]);
-    </script>
+
 </body>
 </html>
 
