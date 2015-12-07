@@ -39,7 +39,6 @@ angular.module('app.api.controller', [
         $scope.handleErrors(promise).then(function (data) {
             $scope.shortcut = data;
         }, function (error) {
-            $scope.index = [];
             $scope.shortcut = [];
             if (error.serviceError === true) {
                 //notifications.updateMessage(error.reason, true);
@@ -47,8 +46,32 @@ angular.module('app.api.controller', [
         });
     };
 
+    /**
+     * Handles error notifications in case of a subsonic error or an HTTP error. Sets a 'serviceError' flag when
+     * it is neither.
+     * @param  {Promise} promise a Promise that must be resolved or rejected with an object : {'reason': a message that can be displayed to a user, 'httpError': the HTTP error code, 'subsonicError': the error Object sent by Subsonic}
+     * @return {Promise}         the original promise passed as argument. That way we can chain it further !
+     */
+    // TODO: Hyz: Move this to a response interceptor ?
+    $scope.handleErrors = function (promise) {
+        promise.then(null, function (error) {
+            var errorNotif;
+            if (error.subsonicError !== undefined) {
+                errorNotif = error.reason + ' ' + error.subsonicError.message;
+            } else if (error.httpError !== undefined) {
+                errorNotif = error.reason + ' HTTP error ' + error.httpError;
+            } else {
+                error.serviceError = true;
+            }
+            if (error.subsonicError !== undefined || error.httpError !== undefined) {
+                //notifications.updateMessage(errorNotif, true);
+            }
+        });
+       return promise;
+    };
+
     /* Launch on Startup */
-    //$scope.test();
     $scope.shortcut = 'Hello Foo'
+    $scope.test();
     /* End Startup */
 }]);

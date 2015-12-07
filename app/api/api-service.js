@@ -30,7 +30,8 @@ function apiService(
     _.extend(self, {
         getArtists           : getArtists,
         test                 : test,
-        ping                 : ping
+        ping                 : ping,
+        apiRequest      : apiRequest
     });
 
     // TODO: Hyz: Remove when refactored
@@ -57,7 +58,7 @@ function apiService(
      * @param  {Object} config     optional $http config object. The base settings expected by Subsonic (username, password, etc.) will be overwritten.
      * @return {Promise}           a Promise that will be resolved if we receive the 'ok' status from Subsonic. Will be rejected otherwise with an object : {'reason': a message that can be displayed to a user, 'httpError': the HTTP error code, 'subsonicError': the error Object sent by Subsonic}
      */
-    function subsonicRequest(partialUrl, config) {
+    function apiRequest(partialUrl, config) {
         var exception = { reason: 'Error when contacting the Subsonic server.' };
         var deferred = $q.defer();
         var actualUrl = (partialUrl.charAt(0) === '/') ? partialUrl : '/' + partialUrl;
@@ -77,23 +78,16 @@ function apiService(
         actualConfig.timeout = globals.settings.Timeout;
 
         var httpPromise;
+        /* JSONP
         if (globals.settings.Protocol === 'jsonp') {
             actualConfig.params.callback = 'JSON_CALLBACK';
             httpPromise = $http.jsonp(url, actualConfig);
         } else {
-            httpPromise = $http.get(url, actualConfig);
         }
+        */
+        httpPromise = $http.get(url, actualConfig);
         httpPromise.success(function (data) {
-            var subsonicResponse = (data['subsonic-response'] !== undefined) ? data['subsonic-response'] : { status: 'failed' };
-            if (subsonicResponse.status === 'ok') {
-                deferred.resolve(subsonicResponse);
-            } else {
-                if (subsonicResponse.status === 'failed' && subsonicResponse.error !== undefined) {
-                    exception.subsonicError = subsonicResponse.error;
-                    exception.version = subsonicResponse.version;
-                }
-                deferred.reject(exception);
-            }
+            deferred.resolve(data);
         }).error(function (data, status) {
             exception.httpError = status;
             deferred.reject(exception);
@@ -102,16 +96,16 @@ function apiService(
     }
 
     function test() {
-        return self.subsonicRequest('test');
+        return self.apiRequest('test');
     }
 
     function ping() {
-        return self.subsonicRequest('ping.view');
+        return self.apiRequest('ping.view');
     }
 
     function getMusicFolders() {
         var exception = { reason: 'No music folder found on the Subsonic server.' };
-        var promise = self.subsonicRequest('getMusicFolders.view', {
+        var promise = self.apiRequest('getMusicFolders.view', {
             cache: true
         }).then(function (subsonicResponse) {
             if (subsonicResponse.musicFolders !== undefined && subsonicResponse.musicFolders.musicFolder !== undefined) {
@@ -131,7 +125,7 @@ function apiService(
                 musicFolderId: folder
             };
         }
-        var promise = self.subsonicRequest('getIndexes.view', {
+        var promise = self.apiRequest('getIndexes.view', {
             cache: true,
             params: params
         }).then(function (subsonicResponse) {
