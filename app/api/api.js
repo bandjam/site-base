@@ -5,6 +5,7 @@
 * notifications.
 */
 angular.module('app.api.controller', [
+    'ngLodash',
     'app.api.service'
 ])
 
@@ -13,7 +14,7 @@ angular.module('app.api.controller', [
     '$rootScope',
     '$routeParams',
     '$window',
-    'globals',
+    'lodash',
     'api',
     function (
         $scope,
@@ -21,33 +22,33 @@ angular.module('app.api.controller', [
         $routeParams,
         $window,
         _,
-        globals,
         api
     ) {
     'use strict';
 
     _.extend($scope, {
+        test                 : test
     });
 
-    $scope.getArtists = function (folder) {
+    function test(folder) {
         var savedFolder = $scope.SelectedMusicFolder;
         if (isNaN(folder) && savedFolder) {
             folder = savedFolder.id;
         }
-        var promise = subsonic.getArtists(folder);
+        var promise = api.test(folder);
         $scope.handleErrors(promise).then(function (data) {
-            $scope.index = data.index;
-            $scope.shortcut = data.shortcut;
+            $scope.shortcut = data;
         }, function (error) {
             $scope.index = [];
             $scope.shortcut = [];
             if (error.serviceError === true) {
-                notifications.updateMessage(error.reason, true);
+                //notifications.updateMessage(error.reason, true);
             }
         });
     };
 
     /* Launch on Startup */
-    $scope.getArtists();
+    //$scope.test();
+    $scope.shortcut = 'Hello Foo'
     /* End Startup */
 }]);

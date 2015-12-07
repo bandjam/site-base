@@ -4,56 +4,33 @@
 * Provides access through $http to the Subsonic server's API.
 * Also offers more fine-grained functionality that is not part of Subsonic's API.
 */
-angular.module('jamstash.subsonic.service', [
+angular.module('app.api.service', [
     'ngLodash',
-    'jamstash.settings.service',
-    'jamstash.model'
+    'app.common.service'
 ])
 
-.service('subsonic', subsonicService);
+.service('api', apiService);
 
-subsonicService.$inject = [
+apiService.$inject = [
     '$http',
     '$q',
     'lodash',
-    'globals',
-    'map'
+    'globals'
 ];
 
-function subsonicService(
+function apiService(
     $http,
     $q,
     _,
-    globals,
-    map
+    globals
 ) {
     'use strict';
 
     var self = this;
     _.extend(self, {
-        addToPlaylist        : addToPlaylist,
-        deletePlaylist       : deletePlaylist,
-        getAlbumByTag        : getAlbumByTag,
-        getAlbumListBy       : getAlbumListBy,
         getArtists           : getArtists,
-        getGenres            : getGenres,
-        getMusicFolders      : getMusicFolders,
-        getPlaylist          : getPlaylist,
-        getPlaylists         : getPlaylists,
-        getPodcast           : getPodcast,
-        getPodcasts          : getPodcasts,
-        getRandomSongs       : getRandomSongs,
-        getRandomStarredSongs: getRandomStarredSongs,
-        getDirectory         : getDirectory,
-        getStarred           : getStarred,
-        newPlaylist          : newPlaylist,
-        ping                 : ping,
-        recursiveGetDirectory: recursiveGetDirectory,
-        savePlaylist         : savePlaylist,
-        scrobble             : scrobble,
-        search               : search,
-        subsonicRequest      : subsonicRequest,
-        toggleStar           : toggleStar
+        test                 : test,
+        ping                 : ping
     });
 
     // TODO: Hyz: Remove when refactored
@@ -122,6 +99,10 @@ function subsonicService(
             deferred.reject(exception);
         });
         return deferred.promise;
+    }
+
+    function test() {
+        return self.subsonicRequest('test');
     }
 
     function ping() {

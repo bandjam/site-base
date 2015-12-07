@@ -278,6 +278,13 @@ module.exports = function (grunt) {
                 dot: true,
                 src: ['<%= yeoman.webroot %>/{,*/}*']
             }]
+          },
+          api: {
+            options: { force: true },
+            files: [{
+                dot: true,
+                src: ['<%= yeoman.api %>/{,*/}*']
+            }]
           }
         },
 
@@ -421,14 +428,18 @@ module.exports = function (grunt) {
     ]);
     grunt.registerTask('deploy', [
         'build',
+        'clean:www',
         'copy:www'
     ]);
     grunt.registerTask('deployapi', [
         'build',
+        'clean:api',
         'copy:api'
     ]);
     grunt.registerTask('deployall', [
         'build',
+        'clean:www',
+        'clean:api',
         'copy:www',
         'copy:api'
     ]);
