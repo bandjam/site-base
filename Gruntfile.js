@@ -448,7 +448,7 @@ module.exports = function (grunt) {
     grunt.registerTask('testunit', ['karma:unit']);
 
 
-    grunt.registerTask('default', ['test', 'build']);
+    //grunt.registerTask('default', ['test', 'build']);
 
 
 };
