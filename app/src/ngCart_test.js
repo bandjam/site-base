@@ -48,7 +48,7 @@ describe('ngCart module', function() {
 
              it('should be able to empty', function() {
                 $scope.ngCart.empty();
-                expect($scope.ngCart.getItems().length).toEqual(0);
+               expect($scope.ngCart.getItems().length).toEqual(0);
             });
 
             it('should be able to show isEmpty', function() {

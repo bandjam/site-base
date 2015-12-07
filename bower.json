@@ -1,6 +1,6 @@
 {
-  "name": "ngCart",
-  "description": "Shopping Cart built for AngularJS",
+  "name": "bandjam",
+  "description": "",
   "keywords": [
     "AngularJS",
     "module",
@@ -12,12 +12,12 @@
     "shopping"
   ],
   "authors": {
-    "name": "Dan Shreim",
-    "email": "dan@snapjay.com>",
-    "homepage": "http://www.snapjay.com/"
+    "name": "",
+    "email": "",
+    "homepage": ""
   },
   "version": "1.0.0",
-  "homepage": "http://ngcart.snapjay.com",
+  "homepage": "",
   "license": "MIT",
   "main": "app/index.html",
   "private": false,
@@ -28,7 +28,6 @@
     "angular": ">=1.2.x",
     "angular-route": ">=1.2.x",
     "karma": "~0.4.6",
-    "ngCart": "ngcart#~1.0.0",
     "bootstrap-css-only": "~3.3.5",
     "headroom.js": "~0.7.0"
   },
