@@ -24,8 +24,15 @@ module.exports = function (grunt) {
     };
 
     // Paths to ssh config & private key
+    /*
+    testServer.json
+    {
+        "host": "web02",
+        "username": "trevor"
+    }
+    */
     var sshConfigFile = '.ssh/testServer.json';
-    var sshKeyFile = '.ssh/test-server-key/';
+    var sshKeyFile = '.ssh/test-server-key';
 
     grunt.initConfig({
 
@@ -377,7 +384,14 @@ module.exports = function (grunt) {
         // Removes everything at the deploy location to avoid filling up the server with revved files.
         sshexec: {
           cleanTest: {
-            command: 'rm -rf /var/www/jamstash/*',
+            command: 'rm -rf /var/www/html/ngcart/*',
+            options: {
+              config: 'testServer',
+              privateKey: '<%= testServerKey %>'
+            }
+          },
+          cleanTestApi: {
+            command: 'ls /var/www/html/api | grep -v tmp | xargs rm -rf',
             options: {
               config: 'testServer',
               privateKey: '<%= testServerKey %>'
@@ -391,8 +405,21 @@ module.exports = function (grunt) {
               './': ['<%= yeoman.dist %>/**/*', '<%= yeoman.dist %>/.git*']
             },
             options: {
-              path: '/var/www/jamstash',
+              path: '/var/www/html/ngcart',
               srcBasePath: "dist/",
+              config: 'testServer',
+              privateKey: '<%= testServerKey %>',
+              showProgress: true,
+              createDirectories: true
+            }
+          },
+          testapi: {
+            files: {
+              './': ['api/**/*', 'api/.git*']
+            },
+            options: {
+              path: '<%= yeoman.api %>',
+              srcBasePath: "api/",
               config: 'testServer',
               privateKey: '<%= testServerKey %>',
               showProgress: true,
@@ -426,22 +453,19 @@ module.exports = function (grunt) {
         'usemin',
         'htmlmin'
     ]);
-    grunt.registerTask('deploy', [
+    grunt.registerTask('deploy', 'Build and deploy to test server', function () {
+      return grunt.task.run([
         'build',
-        'clean:www',
-        'copy:www'
-    ]);
-    grunt.registerTask('deployapi', [
-        'clean:api',
-        'copy:api'
-    ]);
-    grunt.registerTask('deployall', [
-        'build',
-        'clean:www',
-        'clean:api',
-        'copy:www',
-        'copy:api'
-    ]);
+        'sshexec:cleanTest',
+        'sftp:test'
+      ]);
+    });
+    grunt.registerTask('deployapi', 'Build and deploy to test server', function () {
+      return grunt.task.run([
+        'sshexec:cleanTestApi',
+        'sftp:testapi'
+      ]);
+    });
     grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
       if (target === 'dist') {
         return grunt.task.run(['build', 'connect:dist:keepalive']);
