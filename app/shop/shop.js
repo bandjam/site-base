@@ -4,12 +4,12 @@
 * Access and use the Subsonic Server. The Controller is in charge of relaying the Service's messages to the user through the
 * notifications.
 */
-angular.module('app.api.controller', [
+angular.module('app.shop.controller', [
     'ngLodash',
     'app.api.service'
 ])
 
-.controller('apiController', [
+.controller('shopController', [
     '$scope',
     '$rootScope',
     '$routeParams',
@@ -27,19 +27,15 @@ angular.module('app.api.controller', [
     'use strict';
 
     _.extend($scope, {
-        test                 : test
+        getProducts             : getProducts
     });
 
-    function test(folder) {
-        var savedFolder = $scope.SelectedMusicFolder;
-        if (isNaN(folder) && savedFolder) {
-            folder = savedFolder.id;
-        }
-        var promise = api.test(folder);
+    function getProducts(id) {
+        var promise = api.getProducts(id);
         $scope.handleErrors(promise).then(function (data) {
-            $scope.shortcut = data;
+            $scope.products = data;
         }, function (error) {
-            $scope.shortcut = [];
+            $scope.products = [];
             if (error.serviceError === true) {
                 //notifications.updateMessage(error.reason, true);
             }
@@ -71,7 +67,6 @@ angular.module('app.api.controller', [
     };
 
     /* Launch on Startup */
-    $scope.shortcut = 'Hello Foo'
-    $scope.test();
+    $scope.getProducts();
     /* End Startup */
 }]);

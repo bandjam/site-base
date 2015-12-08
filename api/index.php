@@ -2,6 +2,15 @@
 $f3=require('fatfree/lib/base.php');
 new Session();
 
+$f3->config('fatfree/config.ini');
+//$f3->set('AUTOLOAD','public/pages/');
+
+//$f3->route('GET /','');
+//$f3->route('GET /','MainController->render');
+$f3->route('GET /login','UserController->render');
+$f3->route('GET /authenticate','UserController->authenticate');
+$f3->route('GET /product','ProductController->test');
+
 $f3->route('GET /',
     function() {
         echo 'Hello, world!';

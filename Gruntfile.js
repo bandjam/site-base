@@ -432,7 +432,6 @@ module.exports = function (grunt) {
         'copy:www'
     ]);
     grunt.registerTask('deployapi', [
-        'build',
         'clean:api',
         'copy:api'
     ]);

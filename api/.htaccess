@@ -1,6 +1,8 @@
 RewriteEngine On
 RewriteBase /api/
+RewriteRule ^(app|dict|ns|tmp)\/|\.ini$ - [R=404]
 RewriteCond %{REQUEST_FILENAME} !-l
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule .* /api/index.php [L,QSA]
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]

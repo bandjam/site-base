@@ -30,6 +30,7 @@ function apiService(
     _.extend(self, {
         getArtists           : getArtists,
         test                 : test,
+        getProducts          : getProducts,
         ping                 : ping,
         apiRequest      : apiRequest
     });
@@ -97,6 +98,14 @@ function apiService(
 
     function test() {
         return self.apiRequest('test');
+    }
+
+    function getProducts(id) {
+        if (isNaN(id)) {
+            return self.apiRequest('product');
+        } else {
+            return self.apiRequest('product?id=' + id);
+        }
     }
 
     function ping() {

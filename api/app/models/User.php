@@ -3,7 +3,7 @@
 class User extends DB\SQL\Mapper{
 
 	public function __construct(DB\SQL $db) {
-	    parent::__construct($db,'user');
+	    parent::__construct($db,'users');
 	}
 	
 	public function all() {
@@ -12,7 +12,7 @@ class User extends DB\SQL\Mapper{
 	}
 
 	public function getById($id) {
-	    $this->load(array('id=?',$id));
+	    $this->load(array('user_id=?',$id));
 	    return $this->query;
 	}
 
