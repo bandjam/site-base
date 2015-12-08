@@ -16,7 +16,7 @@ angular.module('app.shop.controller', [
     '$window',
     'lodash',
     'api',
-    function (
+    function ( 
         $scope,
         $rootScope,
         $routeParams,

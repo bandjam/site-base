@@ -33,6 +33,7 @@ module.exports = function (grunt) {
     */
     var sshConfigFile = '.ssh/testServer.json';
     var sshKeyFile = '.ssh/test-server-key';
+    var serveStatic = require('serve-static');
 
     grunt.initConfig({
 
@@ -91,11 +92,10 @@ module.exports = function (grunt) {
               open: true,
               middleware: function (connect) {
                 return [
-                  connect().use(
-                    '/bower_components',
-                    connect.static('./bower_components')
-                  ),
-                  connect.static(appConfig.app)
+                  require('connect-livereload')(), 
+                  serveStatic('.tmp'),
+                  connect().use('/bower_components', serveStatic('./bower_components')),
+                  serveStatic(appConfig.app)
                 ];
               }
             }
@@ -391,7 +391,7 @@ module.exports = function (grunt) {
             }
           },
           cleanTestApi: {
-            command: 'ls /var/www/html/api | grep -v tmp | xargs rm -rf',
+            command: 'cd /var/www/html/api; ls | grep -v tmp | xargs rm -rf',
             options: {
               config: 'testServer',
               privateKey: '<%= testServerKey %>'
@@ -415,7 +415,7 @@ module.exports = function (grunt) {
           },
           testapi: {
             files: {
-              './': ['api/**/*', 'api/.git*']
+              './': ['api/**/*', 'api/.*']
             },
             options: {
               path: '<%= yeoman.api %>',
@@ -436,6 +436,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-karma');
 
     grunt.registerTask('build', [
@@ -473,7 +474,7 @@ module.exports = function (grunt) {
 
       grunt.task.run([
           'wiredep',
-          'karma:continuous',
+          //'karma:continuous',
           'connect:livereload',
           'watch'
         ]);

@@ -16,6 +16,17 @@ span[ng-click] {
 .headroom--unpinned {
     transform: translateY(-100%);
 }
+.headroom .summary {
+  color: #ffffff;
+  float: right;
+  padding-top: 10px;
+}
+.headroom .icon path {
+  fill: #ffffff;
+}
+.header {
+  margin: 65px 0 0 0;
+}
 
 .form-signin {
   max-width: 330px;

@@ -58,27 +58,6 @@
 	],
 	"file_history":
 	[
-		"//Web02/users/trevor/site-base/app/api/api-service.js",
-		"//Web02/users/trevor/site-base/app/shop/shop.js",
-		"//Web02/users/trevor/site-base/app/shop/shop.html",
-		"//Web02/users/trevor/site-base/app/app.js",
-		"//Web02/users/trevor/site-base/app/index.html",
-		"//Web02/users/trevor/site-base/app/template/products.html",
-		"//Web02/users/trevor/site-base/app/api/api.js",
-		"//Web02/users/trevor/site-base/app/template/apitest.html",
-		"//Web02/users/trevor/site-base/api/app/controllers/Controller.php",
-		"//Web02/users/trevor/site-base/api/fatfree/config.ini",
-		"//Web02/users/trevor/site-base/api/app/models/User.php",
-		"//Web02/users/trevor/site-base/api/app/models/Product.php",
-		"//Web02/users/trevor/site-base/api/app/controllers/ProductController.php",
-		"//Web02/users/trevor/site-base/api/index.php",
-		"//Web02/users/trevor/site-base/Gruntfile.js",
-		"//Web02/users/trevor/site-base/api/.htaccess",
-		"//Web02/users/trevor/site-base/app/style/style.css",
-		"//Web02/users/trevor/site-base/api/fatfree/routes.ini",
-		"//Web02/users/trevor/site-base/app/common/globals.js",
-		"//Web02/users/trevor/site-base/bower.json",
-		"//Web02/users/trevor/site-base/app/template/login.html",
 		"/E/Git/Jamstash/app/styles/Style.css",
 		"/E/Git/Jamstash/app/player/player.html",
 		"/E/Git/Jamstash/app/player/player.css",
@@ -137,7 +116,7 @@
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 22.0
 	},
 	"find_in_files":
 	{
@@ -163,12 +142,6 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"		$",
-			"products",
-			"subsonicRequest",
-			"js",
-			"api",
-			"subsonicService",
 			"icon-wrap",
 			"wrap",
 			"icon-wrap",
@@ -290,7 +263,13 @@
 			"playPauseSong",
 			"ping",
 			"BaseParams",
-			"globals.BaseParams"
+			"globals.BaseParams",
+			"scope.ping",
+			"ping",
+			"ping(",
+			"ApiVersion",
+			"ping",
+			"ShowQueue"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -298,8 +277,6 @@
 		"regex": false,
 		"replace_history":
 		[
-			"apiRequest",
-			"apiService",
 			"Drois Sans",
 			"Noto Sans",
 			"Droid Sans",
@@ -365,7 +342,7 @@
 	"project": "site.sublime-project",
 	"replace":
 	{
-		"height": 62.0
+		"height": 40.0
 	},
 	"save_all_on_build": true,
 	"select_file":

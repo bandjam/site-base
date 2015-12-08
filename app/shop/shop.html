@@ -1,24 +1,9 @@
 <h1>Shop</h1>
 
 <div class="row">
-    <div class="col-xs-6 col-sm-3">
-        <h4>My Item #1</h4>
-        <p> $10.99</p>
-        <ngcart-addtocart id="item1" name="My Item #1" price="10.99" quantity="1" quantity-max="5">Add to Cart</ngcart-addtocart>
-    </div>
-    <div class="col-xs-6 col-sm-3">
-        <h4>My Item #2</h4>
-        <p> $15.29</p>
-        <ngcart-addtocart id="item2" name="My Item #2" price="15.29" quantity="1" quantity-max="5">Add to Cart</ngcart-addtocart>
-    </div>
-    <div class="col-xs-6 col-sm-3">
-        <h4>My Item #3</h4>
-        <p> $25.75</p>
-        <ngcart-addtocart id="item3" name="My Item #3" price="25.75" quantity="3" quantity-max="10">Add to Cart</ngcart-addtocart>
-    </div>
-    <div class="col-xs-6 col-sm-3">
-        <h4>My Item #4</h4>
-        <p> $29.25</p>
-        <ngcart-addtocart id="item4" name="My Item #4" price="29.25" quantity="1" quantity-max="10">Add to Cart</ngcart-addtocart>        
+    <div ng-repeat="o in products" class="col-xs-6 col-sm-3">
+        <h4>{{ o.name }}</h4>
+        <p> {{ o.price }}</p>
+        <ngcart-addtocart id="{{ o.product_id }}" name="{{ o.name }}" price="{{ o.price }}" quantity="1" quantity-max="5">Add to Cart</ngcart-addtocart> 
     </div>
 </div>

@@ -22,7 +22,7 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
             transclude: true,
             templateUrl: function(element, attrs) {
                 if ( typeof attrs.templateUrl == 'undefined' ) {
-                    return 'template/ngCart/addtocart.html';
+                    return 'cart/addtocart.html';
                 } else {
                     return attrs.templateUrl;
                 }
@@ -56,7 +56,7 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
             scope: {},
             templateUrl: function(element, attrs) {
                 if ( typeof attrs.templateUrl == 'undefined' ) {
-                    return 'template/ngCart/cart.html';
+                    return 'cart/cart-directive.html';
                 } else {
                     return attrs.templateUrl;
                 }
@@ -75,7 +75,7 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
             transclude: true,
             templateUrl: function(element, attrs) {
                 if ( typeof attrs.templateUrl == 'undefined' ) {
-                    return 'template/ngCart/summary.html';
+                    return 'cart/summary.html';
                 } else {
                     return attrs.templateUrl;
                 }
@@ -111,7 +111,7 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
             transclude: true,
             templateUrl: function(element, attrs) {
                 if ( typeof attrs.templateUrl == 'undefined' ) {
-                    return 'template/ngCart/checkout.html';
+                    return 'cart/checkout.html';
                 } else {
                     return attrs.templateUrl;
                 }

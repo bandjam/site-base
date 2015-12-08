@@ -28,7 +28,6 @@
     "angular": ">=1.2.x",
     "angular-route": ">=1.2.x",
     "karma": "~0.4.6",
-    "ngCart": "ngcart#~1.0.0",
     "bootstrap-css-only": "~3.3.5",
     "headroom.js": "~0.7.0",
     "ng-lodash": "~0.2.3"
