@@ -51,3 +51,6 @@ site.conf
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Text editor #
+*.swp
