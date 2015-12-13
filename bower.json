@@ -20,19 +20,27 @@
   "homepage": "http://ngcart.snapjay.com",
   "license": "MIT",
   "main": "app/index.html",
-  "private": false,
+  "private": true,
   "ignore": [
-    ".travis.yml"
+    "bower_components",
+    "node_modules"
   ],
   "dependencies": {
-    "angular": ">=1.2.x",
-    "angular-route": ">=1.2.x",
+    "angular": "~1.2.x",
+    "angular-route": "~1.2.x",
     "karma": "~0.4.6",
     "bootstrap-css-only": "~3.3.5",
     "headroom.js": "~0.7.0",
-    "ng-lodash": "~0.2.3"
+    "ng-lodash": "~0.2.3",
+    "plupload": "~2.1.8"
   },
   "devDependencies": {
-    "angular-mocks": ">=1.2.x"
-  }
+    "angular-mocks": "~1.2.x"
+  },
+  "overrides": {
+      "plupload": {
+          "main": ["js/plupload.full.min.js"]
+      }
+  },
+  "appPath": "app"
 }

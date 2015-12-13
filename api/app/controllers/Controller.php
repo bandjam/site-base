@@ -28,10 +28,6 @@ class Controller {
 	        array( \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION )
 	    );
 
-	    if ($f3->get('schema') && $this->db->driver() =='pgsql') {
-			$this->db->exec("set search_path to {$f3->get('schema')}, public");
-		}
-
 	    $this->db=$db;
 	}
 

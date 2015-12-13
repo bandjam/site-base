@@ -52,7 +52,7 @@ module.exports = function (grunt) {
             files: ['<%= yeoman.app %>/**/*.js', '!<%= yeoman.app %>/**/*_test.js'],
             tasks: ['karma:continuous:run'],
             options: {
-              livereload: '<%= connect.options.livereload %>'
+              livereload: true
             }
           },
           jsTest: {
@@ -75,7 +75,7 @@ module.exports = function (grunt) {
             ]
           },
           options: {
-            livereload: '<%= connect.options.livereload %>'
+            livereload: true
           }
         },
 
@@ -85,14 +85,14 @@ module.exports = function (grunt) {
             port: 9000,
             // Change this to '0.0.0.0' to access the server from outside.
             hostname: 'localhost',
-            livereload: 35729
+            livereload: true
           },
           livereload: {
             options: {
               open: true,
               middleware: function (connect) {
                 return [
-                  require('connect-livereload')(), 
+                  require('connect-livereload')(),
                   serveStatic('.tmp'),
                   connect().use('/bower_components', serveStatic('./bower_components')),
                   serveStatic(appConfig.app)
@@ -329,9 +329,17 @@ module.exports = function (grunt) {
               flatten: true,
               src: [
                 'bower_components/jplayer/skin/pink.flag/*.{jpg,gif,png}',
-                'bower_components/fancybox/source/*.{png,gif}'
+                'bower_components/fancybox/source/*.{png,gif}',
               ],
               dest: '.tmp/styles'
+            },
+            {
+              expand: true,
+              flatten: true,
+              src: [
+                'bower_components/plupload/js/Moxie.*'
+              ],
+              dest: '<%= yeoman.dist %>'
             }
             ]
           },
@@ -430,15 +438,6 @@ module.exports = function (grunt) {
 
     });
 
-
-    // Load the plugin that provides the "uglify" task.
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-karma');
-
     grunt.registerTask('build', [
         'clean:dist',
         'wiredep:app',
@@ -482,8 +481,6 @@ module.exports = function (grunt) {
     grunt.registerTask('devmode', ['karma:unit', 'watch']);
     grunt.registerTask('testunit', ['karma:unit']);
     grunt.registerTask('test', ['karma:travis']);
-
-
     grunt.registerTask('default', ['test', 'build']);
 
 
