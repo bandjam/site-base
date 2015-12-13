@@ -7,7 +7,7 @@ module.exports = function (grunt) {
 
     // Lazy-load grunt tasks automatically
     require('jit-grunt')(grunt, {
-        useminPrepare: 'grunt-usemin',
+        //useminPrepare: 'grunt-usemin',
         sshexec: 'grunt-ssh',
         sftp: 'grunt-ssh'
     });
@@ -33,7 +33,6 @@ module.exports = function (grunt) {
     */
     var sshConfigFile = '.ssh/testServer.json';
     var sshKeyFile = '.ssh/test-server-key';
-    var serveStatic = require('serve-static');
 
     grunt.initConfig({
 
@@ -76,44 +75,6 @@ module.exports = function (grunt) {
           },
           options: {
             livereload: '<%= connect.options.livereload %>'
-          }
-        },
-
-        // The actual grunt server settings
-        connect: {
-          options: {
-            port: 9000,
-            // Change this to '0.0.0.0' to access the server from outside.
-            hostname: 'localhost',
-            livereload: 35729
-          },
-          livereload: {
-            options: {
-              open: true,
-              middleware: function (connect) {
-                return [
-                  require('connect-livereload')(), 
-                  serveStatic('.tmp'),
-                  connect().use('/bower_components', serveStatic('./bower_components')),
-                  serveStatic(appConfig.app)
-                ];
-              }
-            }
-          },
-          coverage: {
-            options: {
-              open: true,
-              port: 9003,
-              keepalive: true,
-              base: './coverage/'
-            }
-          },
-          dist: {
-            options: {
-              port: 9002,
-              open: true,
-              base: '<%= yeoman.dist %>'
-            }
           }
         },
 
@@ -273,12 +234,6 @@ module.exports = function (grunt) {
               ]
             }]
           },
-          coverage: {
-            files: [{
-                dot: true,
-                src: ['./coverage']
-            }]
-          },
           www: {
             options: { force: true },
             files: [{
@@ -436,23 +391,22 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-karma');
 
     grunt.registerTask('build', [
         'clean:dist',
         'wiredep:app',
-        'copy:svg',
-        'useminPrepare',
-        'concat:generated',
+        //'copy:svg',
+        //'useminPrepare',
+        //'concat:generated',
         'copy:dist',
-        'imagemin',
+        //'imagemin',
         //'ngAnnotate',
-        'cssmin',
-        'uglify:generated',
-        'filerev',
-        'usemin',
-        'htmlmin'
+        //'cssmin',
+        //'uglify:generated',
+        //'filerev',
+        //'usemin',
+        //'htmlmin'
     ]);
     grunt.registerTask('deploy', 'Build and deploy to test server', function () {
       return grunt.task.run([
@@ -467,23 +421,19 @@ module.exports = function (grunt) {
         'sftp:testapi'
       ]);
     });
-    grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
-      if (target === 'dist') {
-        return grunt.task.run(['build', 'connect:dist:keepalive']);
-      }
+    //grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
+    //  if (target === 'dist') {
+    //    return grunt.task.run(['build', 'connect:dist:keepalive']);
+    //  }
 
-      grunt.task.run([
-          'wiredep',
-          //'karma:continuous',
-          'connect:livereload',
-          'watch'
-        ]);
-    });
+    //  grunt.task.run([
+    //      'wiredep',
+    //      //'karma:continuous',
+    //      'connect:livereload',
+    //      'watch'
+    //    ]);
+    //});
     grunt.registerTask('devmode', ['karma:unit', 'watch']);
     grunt.registerTask('testunit', ['karma:unit']);
-
-
-    //grunt.registerTask('default', ['test', 'build']);
-
 
 };
