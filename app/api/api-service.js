@@ -4,56 +4,35 @@
 * Provides access through $http to the Subsonic server's API.
 * Also offers more fine-grained functionality that is not part of Subsonic's API.
 */
-angular.module('jamstash.subsonic.service', [
+angular.module('app.api.service', [
     'ngLodash',
-    'jamstash.settings.service',
-    'jamstash.model'
+    'app.common.service'
 ])
 
-.service('subsonic', subsonicService);
+.service('api', apiService);
 
-subsonicService.$inject = [
+apiService.$inject = [
     '$http',
     '$q',
     'lodash',
-    'globals',
-    'map'
+    'globals'
 ];
 
-function subsonicService(
+function apiService(
     $http,
     $q,
     _,
-    globals,
-    map
+    globals
 ) {
     'use strict';
 
     var self = this;
     _.extend(self, {
-        addToPlaylist        : addToPlaylist,
-        deletePlaylist       : deletePlaylist,
-        getAlbumByTag        : getAlbumByTag,
-        getAlbumListBy       : getAlbumListBy,
         getArtists           : getArtists,
-        getGenres            : getGenres,
-        getMusicFolders      : getMusicFolders,
-        getPlaylist          : getPlaylist,
-        getPlaylists         : getPlaylists,
-        getPodcast           : getPodcast,
-        getPodcasts          : getPodcasts,
-        getRandomSongs       : getRandomSongs,
-        getRandomStarredSongs: getRandomStarredSongs,
-        getDirectory         : getDirectory,
-        getStarred           : getStarred,
-        newPlaylist          : newPlaylist,
+        test                 : test,
+        getProducts          : getProducts,
         ping                 : ping,
-        recursiveGetDirectory: recursiveGetDirectory,
-        savePlaylist         : savePlaylist,
-        scrobble             : scrobble,
-        search               : search,
-        subsonicRequest      : subsonicRequest,
-        toggleStar           : toggleStar
+        apiRequest      : apiRequest
     });
 
     // TODO: Hyz: Remove when refactored
@@ -80,7 +59,7 @@ function subsonicService(
      * @param  {Object} config     optional $http config object. The base settings expected by Subsonic (username, password, etc.) will be overwritten.
      * @return {Promise}           a Promise that will be resolved if we receive the 'ok' status from Subsonic. Will be rejected otherwise with an object : {'reason': a message that can be displayed to a user, 'httpError': the HTTP error code, 'subsonicError': the error Object sent by Subsonic}
      */
-    function subsonicRequest(partialUrl, config) {
+    function apiRequest(partialUrl, config) {
         var exception = { reason: 'Error when contacting the Subsonic server.' };
         var deferred = $q.defer();
         var actualUrl = (partialUrl.charAt(0) === '/') ? partialUrl : '/' + partialUrl;
@@ -100,23 +79,16 @@ function subsonicService(
         actualConfig.timeout = globals.settings.Timeout;
 
         var httpPromise;
+        /* JSONP
         if (globals.settings.Protocol === 'jsonp') {
             actualConfig.params.callback = 'JSON_CALLBACK';
             httpPromise = $http.jsonp(url, actualConfig);
         } else {
-            httpPromise = $http.get(url, actualConfig);
         }
+        */
+        httpPromise = $http.get(url, actualConfig);
         httpPromise.success(function (data) {
-            var subsonicResponse = (data['subsonic-response'] !== undefined) ? data['subsonic-response'] : { status: 'failed' };
-            if (subsonicResponse.status === 'ok') {
-                deferred.resolve(subsonicResponse);
-            } else {
-                if (subsonicResponse.status === 'failed' && subsonicResponse.error !== undefined) {
-                    exception.subsonicError = subsonicResponse.error;
-                    exception.version = subsonicResponse.version;
-                }
-                deferred.reject(exception);
-            }
+            deferred.resolve(data);
         }).error(function (data, status) {
             exception.httpError = status;
             deferred.reject(exception);
@@ -124,13 +96,25 @@ function subsonicService(
         return deferred.promise;
     }
 
+    function test() {
+        return self.apiRequest('test');
+    }
+
+    function getProducts(id) {
+        if (isNaN(id)) {
+            return self.apiRequest('product');
+        } else {
+            return self.apiRequest('product?id=' + id);
+        }
+    }
+
     function ping() {
-        return self.subsonicRequest('ping.view');
+        return self.apiRequest('ping.view');
     }
 
     function getMusicFolders() {
         var exception = { reason: 'No music folder found on the Subsonic server.' };
-        var promise = self.subsonicRequest('getMusicFolders.view', {
+        var promise = self.apiRequest('getMusicFolders.view', {
             cache: true
         }).then(function (subsonicResponse) {
             if (subsonicResponse.musicFolders !== undefined && subsonicResponse.musicFolders.musicFolder !== undefined) {
@@ -150,7 +134,7 @@ function subsonicService(
                 musicFolderId: folder
             };
         }
-        var promise = self.subsonicRequest('getIndexes.view', {
+        var promise = self.apiRequest('getIndexes.view', {
             cache: true,
             params: params
         }).then(function (subsonicResponse) {

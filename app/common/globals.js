@@ -3,7 +3,7 @@
 *
 * Houses Jamstash's global settings and a few utility functions.
 */
-angular.module('app.globals.service', [])
+angular.module('app.common.service', [])
 
 .service('globals', function () {
     'use strict';
@@ -34,7 +34,7 @@ angular.module('app.globals.service', [])
         Url: "http://web02/api",
         Username: "",
         Password: "",
-        Server: "",
+        Server: "http://web02/api",
         Timeout: 20000,
         Protocol: "jsonp",
         ApplicationName: "Jamstash",
@@ -67,7 +67,7 @@ angular.module('app.globals.service', [])
     this.ChangeLog = null;
     this.Messages = [];
 
-    this.BaseURL = function () { return this.settings.Server + '/rest'; };
+    this.BaseURL = function () { return this.settings.Server ; };
     this.BaseParams = function () { return 'u=' + this.settings.Username + '&p=' + this.settings.Password + '&f=' + this.settings.Protocol + '&v=' + this.settings.ApiVersion + '&c=' + this.settings.ApplicationName; };
     this.BaseJSONParams = function () { return 'u=' + this.settings.Username + '&p=' + this.settings.Password + '&f=json&v=' + this.settings.ApiVersion + '&c=' + this.settings.ApplicationName; };
-})
+});

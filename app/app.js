@@ -3,14 +3,17 @@
 var app = angular.module('app', [
     'ngRoute',
     'ngCart',
-    'headroom'
+    'headroom',
+    'app.shop.controller'
 ])
 
-.config(['$routeProvider',
-    function ($routeProvider) {
-      $routeProvider
-        .when('/login', { templateUrl: 'template/login.html', controller: 'myCtrl' });
-    }]);
+.config(['$routeProvider',function ($routeProvider) {
+    $routeProvider
+        .when('/login', { templateUrl: 'common/login.html', controller: 'myCtrl' })
+        .when('/apitest', { templateUrl: 'common/apitest.html', controller: 'apiController' })
+        .when('/shop', { templateUrl: 'shop/shop.html', controller: 'shopController' })
+        .when('/cart', { templateUrl: 'cart/cart.html', controller: 'myCtrl' })
+}]);
 
 app.controller ('myCtrl', ['$scope', '$http', 'ngCart', function($scope, $http, ngCart) {
     ngCart.setTaxRate(7.5);

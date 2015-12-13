@@ -24,8 +24,16 @@ module.exports = function (grunt) {
     };
 
     // Paths to ssh config & private key
+    /*
+    testServer.json
+    {
+        "host": "web02",
+        "username": "trevor"
+    }
+    */
     var sshConfigFile = '.ssh/testServer.json';
-    var sshKeyFile = '.ssh/test-server-key/';
+    var sshKeyFile = '.ssh/test-server-key';
+    var serveStatic = require('serve-static');
 
     grunt.initConfig({
 
@@ -84,11 +92,10 @@ module.exports = function (grunt) {
               open: true,
               middleware: function (connect) {
                 return [
-                  connect().use(
-                    '/bower_components',
-                    connect.static('./bower_components')
-                  ),
-                  connect.static(appConfig.app)
+                  require('connect-livereload')(), 
+                  serveStatic('.tmp'),
+                  connect().use('/bower_components', serveStatic('./bower_components')),
+                  serveStatic(appConfig.app)
                 ];
               }
             }
@@ -278,6 +285,13 @@ module.exports = function (grunt) {
                 dot: true,
                 src: ['<%= yeoman.webroot %>/{,*/}*']
             }]
+          },
+          api: {
+            options: { force: true },
+            files: [{
+                dot: true,
+                src: ['<%= yeoman.api %>/{,*/}*']
+            }]
           }
         },
 
@@ -370,7 +384,14 @@ module.exports = function (grunt) {
         // Removes everything at the deploy location to avoid filling up the server with revved files.
         sshexec: {
           cleanTest: {
-            command: 'rm -rf /var/www/jamstash/*',
+            command: 'rm -rf /var/www/html/ngcart/*',
+            options: {
+              config: 'testServer',
+              privateKey: '<%= testServerKey %>'
+            }
+          },
+          cleanTestApi: {
+            command: 'cd /var/www/html/api; ls | grep -v tmp | xargs rm -rf',
             options: {
               config: 'testServer',
               privateKey: '<%= testServerKey %>'
@@ -384,8 +405,21 @@ module.exports = function (grunt) {
               './': ['<%= yeoman.dist %>/**/*', '<%= yeoman.dist %>/.git*']
             },
             options: {
-              path: '/var/www/jamstash',
+              path: '/var/www/html/ngcart',
               srcBasePath: "dist/",
+              config: 'testServer',
+              privateKey: '<%= testServerKey %>',
+              showProgress: true,
+              createDirectories: true
+            }
+          },
+          testapi: {
+            files: {
+              './': ['api/**/*', 'api/.*']
+            },
+            options: {
+              path: '<%= yeoman.api %>',
+              srcBasePath: "api/",
               config: 'testServer',
               privateKey: '<%= testServerKey %>',
               showProgress: true,
@@ -402,6 +436,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-karma');
 
     grunt.registerTask('build', [
@@ -419,19 +454,19 @@ module.exports = function (grunt) {
         'usemin',
         'htmlmin'
     ]);
-    grunt.registerTask('deploy', [
+    grunt.registerTask('deploy', 'Build and deploy to test server', function () {
+      return grunt.task.run([
         'build',
-        'copy:www'
-    ]);
-    grunt.registerTask('deployapi', [
-        'build',
-        'copy:api'
-    ]);
-    grunt.registerTask('deployall', [
-        'build',
-        'copy:www',
-        'copy:api'
-    ]);
+        'sshexec:cleanTest',
+        'sftp:test'
+      ]);
+    });
+    grunt.registerTask('deployapi', 'Build and deploy to test server', function () {
+      return grunt.task.run([
+        'sshexec:cleanTestApi',
+        'sftp:testapi'
+      ]);
+    });
     grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
       if (target === 'dist') {
         return grunt.task.run(['build', 'connect:dist:keepalive']);
@@ -439,7 +474,7 @@ module.exports = function (grunt) {
 
       grunt.task.run([
           'wiredep',
-          'karma:continuous',
+          //'karma:continuous',
           'connect:livereload',
           'watch'
         ]);

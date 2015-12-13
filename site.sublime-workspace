@@ -1,0 +1,388 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"hide",
+				"hideQueue"
+			],
+			[
+				"previous",
+				"previousTrack"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 58.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"Package Control: Install Package",
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/H/Git/BandJam/site-base"
+	],
+	"file_history":
+	[
+		"/E/Git/Jamstash/app/styles/Style.css",
+		"/E/Git/Jamstash/app/player/player.html",
+		"/E/Git/Jamstash/app/player/player.css",
+		"//web02/www/wp-content/themes/motif/style.css",
+		"/C/Users/Trevor/AppData/Roaming/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings",
+		"//web02/www/wp-content/themes/motif/header.php",
+		"//web02/www/wp-content/themes/motif/footer.php",
+		"//web02/www/wp-content/themes/motif/functions.php",
+		"//web02/www/wp-content/themes/motif/sidebar-front-page.php",
+		"//web02/www/wp-content/themes/motif/content.php",
+		"/E/Git/Jamstash/app/subsonic/subsonic-service.js",
+		"/C/Users/Trevor/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/E/Git/Jamstash/app/player/player-directive_test.js",
+		"/E/Git/Jamstash/app/player/player-service.js",
+		"/E/Git/Jamstash/app/styles/Mobile.css",
+		"/E/Git/Jamstash/app/settings/settings-service.js",
+		"/E/Git/Jamstash/app/subsonic/subsonic.html",
+		"/E/Git/Jamstash/app/archive/archive.js",
+		"/E/Git/Jamstash/app/common/json_changelog.json",
+		"/E/Git/Jamstash/app/styles/Dark.css",
+		"/E/Git/Jamstash/app/common/player-service.js",
+		"/E/Git/Jamstash/package.json",
+		"/E/Git/Jamstash/app/vendor/jquery-split-pane.js",
+		"/E/Git/Jamstash/app/index.html",
+		"/E/Git/Jamstash/Gruntfile.js",
+		"/E/Git/Jamstash/app/subsonic/subsonic.js",
+		"/E/Git/Jamstash/app/common/main-controller.js",
+		"/E/Git/Jamstash/app/archive/archive.html",
+		"/E/Git/Jamstash/app/archive/archive-service.js",
+		"/E/Git/Jamstash/app/common/notification-service.js",
+		"/E/Git/Jamstash/app/settings/settings.js",
+		"/D/GDrive/Projects/Jamstash/Scripts/cpGitToDev.bat",
+		"/D/GDrive/Projects/Jamstash/Scripts/cpGitToWebTest.bat",
+		"/D/GDrive/Projects/Jamstash/Scripts/gitPushDev.bat",
+		"/D/GDrive/Projects/Jamstash/Scripts/redDevBeta.bat",
+		"/D/Git/Jamstash/app/common/json_changelog.json",
+		"/D/Git/Jamstash/app/styles/Mobile.css",
+		"/D/Git/Jamstash/app/common/main-controller.js",
+		"/D/Git/Jamstash/app/index.html",
+		"/D/Git/Jamstash/bower.json",
+		"/D/Git/Jamstash/package.json",
+		"/D/Git/Jamstash/karma.conf.js",
+		"/D/Git/Jamstash/Gruntfile.js",
+		"/D/Git/Jamstash/app/common/songs.html",
+		"/D/Git/Jamstash/app/common/message.html",
+		"/D/Git/Jamstash/app/common/utils-service.js",
+		"/D/Git/Jamstash/app/subsonic/subsonic.html",
+		"/D/Git/Jamstash/app/common/background.js",
+		"/D/Git/Jamstash/app/common/player-service.js",
+		"/D/Git/Jamstash/manifest.json",
+		"/D/GDrive/Projects/Jamstash/Scripts/gitPull.php",
+		"/D/Git/Jamstash/app/common/directives.js",
+		"/D/GDrive/Projects/Jamstash/Scripts/deploy_git.ps1",
+		"/D/Git/Jamstash/app/archive/archive.html",
+		"/D/Git/Jamstash/app/common/model-service.js"
+	],
+	"find":
+	{
+		"height": 22.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			"E:\\Git\\Jamstash\\app",
+			"\\\\web02\\www\\wp-content\\themes\\motif",
+			"E:\\Git\\Jamstash\\app",
+			"D:\\GDrive\\Projects\\Jamstash\\Scripts,*.bat",
+			"D:\\GDrive\\Projects\\Jamstash\\Scripts\\*.bat",
+			"D:\\GDrive\\Projects\\Jamstash\\Scripts",
+			"E:\\Git\\Jamstash\\app",
+			"D:\\Git\\Jamstash\\app",
+			"D:\\Git\\Jamstash",
+			"D:\\Git\\Jamstash\\app",
+			"D:\\Git\\Jamstash",
+			"D:\\Git\\Jamstash\\app"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"icon-wrap",
+			"wrap",
+			"icon-wrap",
+			"songdetails_controls",
+			"ins",
+			"rss",
+			"3D3D3D",
+			"widget-title",
+			".front-widget-area .widget, .sidebar-widget-area .widget",
+			"pop",
+			"popwidget",
+			"entry-title",
+			"widget-title",
+			"entry-title",
+			"widget-title",
+			"main-navigation",
+			".site",
+			"box-shadow",
+			".widget",
+			"transition",
+			".hero-content-overlayer",
+			"Open Sans",
+			"Droid Sans",
+			"serif",
+			"Open Sans",
+			"Droid Sans",
+			"font-family",
+			"main-navig",
+			".site",
+			".widget",
+			"entry-header",
+			"entry-thumbnail",
+			".front-page-content-area .with-featured-image .hentry",
+			"site-brand",
+			".footer-widget-area .search-field",
+			"site-bran",
+			".site",
+			"footer-",
+			".first.front-widgets",
+			"h2",
+			"li",
+			"widget-title",
+			".front-widget-area",
+			".front-widget-area,",
+			".first.front-widgets",
+			".front-page-content-area .with-featured-image .hentry",
+			".hero-content-overlayer",
+			".front-page-content-area .with-featured-image .hentry",
+			"front-page-content-area",
+			"with-featured-image",
+			"featured",
+			"entry-title",
+			"main-nav",
+			"entry-content",
+			"font-fam",
+			".single .entry-title, .page .entry-title",
+			".entry-meta span",
+			".entry-meta .comments-link",
+			".widget",
+			".front-page-content-area .hero",
+			".front-widgets",
+			"secondary",
+			"sidebar",
+			".first.front-widgets",
+			".front-widgets .widget",
+			".first.front-widgets",
+			"^.widget",
+			".widget",
+			".entry-meta .date",
+			".gallery",
+			"comment-respond",
+			"respond",
+			".comment-respond",
+			"input",
+			"textarea",
+			"input",
+			"search-field",
+			"main-navig",
+			"border: 1px solid #ddd;",
+			"box-shadow: rgba(0,0,0, 0.2) 0px 1px 2px;",
+			"box-shadow",
+			"turnVolumeUp",
+			"volume",
+			"getartists",
+			"content.songs",
+			"getalbums",
+			"scope.song",
+			"offset",
+			"sortSubsonicAlbums",
+			"getAlbums",
+			"sortSubsonicAlbums",
+			"genre",
+			"SelectedAlbumSort",
+			"getAlbums",
+			"subsonicRequest",
+			"watch",
+			"if the player service's loadSong flag is true, it does not",
+			"sortSubsonicAlbums",
+			"subsonicRequest",
+			"sortSubsonicAlbums",
+			"sort",
+			"getRandomStarredSongs",
+			"getStarred",
+			"getstarred",
+			"playlist",
+			"when the player service's",
+			"jplayer",
+			"jplayer directive",
+			"sortSubsonicSongs",
+			"sortSubsonicAlbums",
+			"sortSubsonicSongs",
+			"subsonic.",
+			"song",
+			"SelectedAlbumSort",
+			"sort",
+			"sortalbum",
+			"So",
+			"restart",
+			"playPauseSong",
+			"ping",
+			"BaseParams",
+			"globals.BaseParams",
+			"scope.ping",
+			"ping",
+			"ping(",
+			"ApiVersion",
+			"ping",
+			"ShowQueue"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"Drois Sans",
+			"Noto Sans",
+			"Droid Sans",
+			"Open Sans",
+			"border: 1px solid #D3D3D3;",
+			"/*box-shadow: rgba(0,0,0, 0.2) 0px 1px 2px;*/",
+			"this.sortSubsonicAlbums",
+			"E:\\Git",
+			"$rootScope.showIndex",
+			"Artists",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 22.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "site.sublime-project",
+	"replace":
+	{
+		"height": 40.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 257.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

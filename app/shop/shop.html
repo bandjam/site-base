@@ -1,0 +1,9 @@
+<h1>Shop</h1>
+
+<div class="row">
+    <div ng-repeat="o in products" class="col-xs-6 col-sm-3">
+        <h4>{{ o.name }}</h4>
+        <p> {{ o.price }}</p>
+        <ngcart-addtocart id="{{ o.product_id }}" name="{{ o.name }}" price="{{ o.price }}" quantity="1" quantity-max="5">Add to Cart</ngcart-addtocart> 
+    </div>
+</div>
