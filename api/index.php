@@ -14,9 +14,14 @@ $f3->set('CORS.headers','Content-Type');
 $f3->route('GET /login','UserController->render');
 $f3->route('GET /authenticate','UserController->authenticate');
 $f3->route('GET /product','ProductController->test');
+
+// Artist
 $f3->route('POST /upload','ArtistController->upload');
 $f3->route('POST /addAlbum','ArtistController->addAlbum');
 $f3->route('GET /getAlbums','ArtistController->getAlbums');
+
+// Auth
+$f3->route('GET /login','AuthController->login');
 
 $f3->route('GET /',
     function() {
