@@ -332,14 +332,6 @@ module.exports = function (grunt) {
                 'bower_components/fancybox/source/*.{png,gif}',
               ],
               dest: '.tmp/styles'
-            },
-            {
-              expand: true,
-              flatten: true,
-              src: [
-                'bower_components/plupload/js/Moxie.*'
-              ],
-              dest: '<%= yeoman.dist %>'
             }
             ]
           },
@@ -399,7 +391,7 @@ module.exports = function (grunt) {
             }
           },
           cleanTestApi: {
-            command: 'cd /var/www/html/api; ls | grep -v tmp | xargs rm -rf',
+            command: 'cd /var/www/html/api; ls | egrep -v "tmp|uploads" | xargs rm -rf',
             options: {
               config: 'testServer',
               privateKey: '<%= testServerKey %>'

@@ -36,10 +36,5 @@
   "devDependencies": {
     "angular-mocks": "~1.2.x"
   },
-  "overrides": {
-      "plupload": {
-          "main": ["js/plupload.full.min.js"]
-      }
-  },
   "appPath": "app"
 }

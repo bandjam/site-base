@@ -30,7 +30,6 @@ function apiService(
     _.extend(self, {
         getArtists           : getArtists,
         test                 : test,
-        getProducts          : getProducts,
         ping                 : ping,
         apiRequest      : apiRequest
     });
@@ -59,12 +58,12 @@ function apiService(
      * @param  {Object} config     optional $http config object. The base settings expected by Subsonic (username, password, etc.) will be overwritten.
      * @return {Promise}           a Promise that will be resolved if we receive the 'ok' status from Subsonic. Will be rejected otherwise with an object : {'reason': a message that can be displayed to a user, 'httpError': the HTTP error code, 'subsonicError': the error Object sent by Subsonic}
      */
-    function apiRequest(partialUrl, config) {
+    function apiRequest(partialUrl, method, postdata, config) {
         var exception = { reason: 'Error when contacting the Subsonic server.' };
         var deferred = $q.defer();
         var actualUrl = (partialUrl.charAt(0) === '/') ? partialUrl : '/' + partialUrl;
         var url = globals.BaseURL() + actualUrl;
-
+        console.log(postdata);
         // Extend the provided config (if it exists) with our params
         // Otherwise we create a config object
         var actualConfig = config || {};
@@ -86,7 +85,13 @@ function apiService(
         } else {
         }
         */
-        httpPromise = $http.get(url, actualConfig);
+        //httpPromise = $http.get(url, actualConfig);
+        httpPromise = $http({
+            method: method,
+            url: url,
+            data: JSON.stringify(postdata),
+            config: actualConfig
+        });
         httpPromise.success(function (data) {
             deferred.resolve(data);
         }).error(function (data, status) {
@@ -98,14 +103,6 @@ function apiService(
 
     function test() {
         return self.apiRequest('test');
-    }
-
-    function getProducts(id) {
-        if (isNaN(id)) {
-            return self.apiRequest('product');
-        } else {
-            return self.apiRequest('product?id=' + id);
-        }
     }
 
     function ping() {

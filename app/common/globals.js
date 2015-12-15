@@ -1,4 +1,4 @@
-/**
+/*
 * jamstash.settings.service Module
 *
 * Houses Jamstash's global settings and a few utility functions.
@@ -10,6 +10,7 @@ angular.module('app.common.globals', [])
   return {
     cart: componentsDirectory + "cart/",
     shop: componentsDirectory + "shop/",
+    artist: "artist/",
     shared: "shared/",
     dev: "dev/"
   };

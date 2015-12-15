@@ -4,6 +4,7 @@ var app = angular.module('app', [
     'ngRoute',
     'ngCart',
     'app.shop.controller',
+    'app.artist.controller',
     'app.common.globals'
 ])
 
@@ -12,6 +13,7 @@ var app = angular.module('app', [
         .when('/login', { templateUrl: directory.shared + 'login.html', controller: 'myCtrl' })
         .when('/apitest', { templateUrl: directory.dev + 'apitest.html', controller: 'apiController' })
         .when('/upload', { templateUrl: directory.cart + 'upload.html', controller: 'shopController' })
+        .when('/artist', { name: 'artist', templateUrl: 'artist/artist.html', controller: 'artistController' })
         .when('/shop', { templateUrl: directory.shop + 'shop.html', controller: 'shopController' })
         .when('/cart', { templateUrl: directory.cart + 'cart.html', controller: 'myCtrl' })
 }]);
