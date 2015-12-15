@@ -51,9 +51,9 @@ module.exports = function (grunt) {
           js: {
             files: ['<%= yeoman.app %>/**/*.js', '!<%= yeoman.app %>/**/*_test.js'],
             tasks: ['karma:continuous:run'],
-            options: {
-              livereload: true
-            }
+            //options: {
+            //  livereload: '<%= connect.options.livereload %>'
+            //}
           },
           jsTest: {
             files: ['<%= yeoman.app %>/**/*_test.js'],
@@ -66,17 +66,17 @@ module.exports = function (grunt) {
           gruntfile: {
             files: ['Gruntfile.js']
           },
-          livereload: {
-            files: [
-              '<%= yeoman.app %>/**/*.html',
-              '<%= yeoman.app %>/**/*.css',
-              '<%= yeoman.app %>/styles/{,*/}*.css',
-              '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-            ]
-          },
-          options: {
-            livereload: true
-          }
+          //livereload: {
+          //  files: [
+          //    '<%= yeoman.app %>/**/*.html',
+          //    '<%= yeoman.app %>/**/*.css',
+          //    '<%= yeoman.app %>/styles/{,*/}*.css',
+          //    '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+          //  ]
+          //},
+          //options: {
+          //  livereload: '<%= connect.options.livereload %>'
+          //}
         },
 
         // The actual grunt server settings
@@ -85,14 +85,14 @@ module.exports = function (grunt) {
             port: 9000,
             // Change this to '0.0.0.0' to access the server from outside.
             hostname: 'localhost',
-            livereload: true
+            //livereload: 35729
           },
-          livereload: {
+          serve: {
             options: {
               open: true,
               middleware: function (connect) {
                 return [
-                  require('connect-livereload')(),
+                  //require('connect-livereload')(), 
                   serveStatic('.tmp'),
                   connect().use('/bower_components', serveStatic('./bower_components')),
                   serveStatic(appConfig.app)
@@ -119,7 +119,7 @@ module.exports = function (grunt) {
 
         karma: {
             options: {
-              configFile: './karma.conf.js'
+              configFile: './test/karma.conf.js'
             },
             unit: {
               singleRun: true,
@@ -466,14 +466,13 @@ module.exports = function (grunt) {
       grunt.task.run([
           'wiredep',
           //'karma:continuous',
-          'connect:livereload',
+          'connect:serve',
           'watch'
         ]);
     });
     grunt.registerTask('devmode', ['karma:unit', 'watch']);
     grunt.registerTask('testunit', ['karma:unit']);
-    grunt.registerTask('test', ['karma:travis']);
-    grunt.registerTask('default', ['test', 'build']);
+    //grunt.registerTask('default', ['test', 'build']);
 
 
 };

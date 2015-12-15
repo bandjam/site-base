@@ -1,15 +1,16 @@
 <!DOCTYPE HTML>
 <html lang="en">
-<head>
+  <head>
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-    <meta name="description" content="HTML5 Audio Streamer for Subsonic, Archive.org browsing and streaming">
-    <meta name="keywords" content="Subsonic, Archive.org, Live Music Archive, HTML5 Audio, Music Streaming, Live Music">
-    <meta property="og:image" content="http://jamstash.com/images/fbpreview.png"/>
+    <!--<base href="/">-->
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta property="og:image" content=""/>
     <meta name=viewport content="width=device-width, initial-scale=1">
     <title>BandJam</title>
-    <link href="images/favicon_32x32.ico" rel="shortcut icon" />
-    <link rel="icon" href="images/favicon_48x48.png" sizes="48x48"/>
-    <link rel="icon" href="images/favicon_32x32.png" sizes="32x32"/>
+    <link href="" rel="shortcut icon" />
+    <link rel="icon" href="" sizes="48x48"/>
+    <link rel="icon" href="" sizes="32x32"/>
     <!-- build:css(.) styles/vendor.min.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap-css-only/css/bootstrap.css" />
@@ -18,12 +19,11 @@
     <!-- build:css(app) styles/concat.min.css -->
     <link rel="stylesheet" href="style/style.css"/>
     <!-- endbuild -->
-</head>
-<body>
+  </head>
+  <body>
     <div ng-app="app" ng-controller="myCtrl as main">
-    <div class="container">
-
-        <nav headroom class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
           <div class="container">
             <div class="navbar-header">
               <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -49,31 +49,32 @@
           </div>
         </nav>
 
-      <div class="header">
-        <h1>Bootstrap starter template</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-      </div>
+        <div class="header">
+          <h1>Bootstrap starter template</h1>
+          <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+        </div>
+        <hr />
 
-      <div ng-view></div>
-    </div><!-- /.container -->
+        <div ng-view></div>
+      </div><!-- /.container -->
+      <div class="footer">
+        Footer
+      </div>
     </div>
 
     <!-- build:js({.,app}) scripts/vendor.min.js -->
     <!-- bower:js -->
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/headroom.js/dist/headroom.js"></script>
-    <script src="bower_components/headroom.js/dist/jQuery.headroom.js"></script>
-    <script src="bower_components/headroom.js/dist/angular.headroom.js"></script>
     <script src="bower_components/ng-lodash/build/ng-lodash.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <!-- our scripts -->
     <!-- build:js(app) scripts/scripts.min.js -->
-    <script src="cart/ngCart.js"></script>
-    <script src="cart/ngCart.fulfilment.js"></script>
-    <script src="cart/ngCart.directives.js"></script>
-    <script src="shop/shop.js"></script>
+    <script src="components/cart/ngCart.js"></script>
+    <script src="components/cart/ngCart.fulfilment.js"></script>
+    <script src="components/cart/ngCart.directives.js"></script>
+    <script src="components/shop/shop.js"></script>
     <script src="artist/artist.js"></script>
     <script src="plupload/plupload.full.min.js"></script>
     <script src="api/api-service.js"></script>
@@ -82,6 +83,6 @@
     <script src="app.js"></script>
     <!-- endbuild -->
 
-</body>
+  </body>
 </html>
 

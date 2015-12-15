@@ -1,7 +1,10 @@
 'use strict';
 
 
-angular.module('ngCart', ['ngCart.directives'])
+angular.module('ngCart', [
+    'ngCart.directives',
+    'app.common.globals'
+])
 
     .config([function () {
 
@@ -12,7 +15,9 @@ angular.module('ngCart', ['ngCart.directives'])
         };
     })
 
-    .run(['$rootScope', 'ngCart','ngCartItem', 'store', function ($rootScope, ngCart, ngCartItem, store) {
+    .run(['$rootScope', 'directory', 'ngCart','ngCartItem', 'store', function ($rootScope, directory, ngCart, ngCartItem, store) {
+
+        $rootScope.path = directory.cart;
 
         $rootScope.$on('ngCart:change', function(){
             ngCart.$save();
@@ -36,6 +41,10 @@ angular.module('ngCart', ['ngCart.directives'])
                 tax : null,
                 items : []
             };
+        };
+
+        this.path = function() {
+          return $rootScope.path;
         };
 
         this.addItem = function (id, name, price, quantity, data) {

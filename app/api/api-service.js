@@ -6,7 +6,7 @@
 */
 angular.module('app.api.service', [
     'ngLodash',
-    'app.common.service'
+    'app.common.globals'
 ])
 
 .service('api', apiService);

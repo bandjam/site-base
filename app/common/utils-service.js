@@ -5,7 +5,7 @@
 */
 angular.module('app.utils', [
     'ngLodash',
-    'app.common.service'
+    'app.common.globals'
 ])
 
 .service('utils', ['$rootScope', '$location', 'globals', function ($rootScope, $location, globals) {

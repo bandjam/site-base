@@ -3,20 +3,19 @@
 var app = angular.module('app', [
     'ngRoute',
     'ngCart',
-    'headroom',
     'app.shop.controller',
-    'app.artist.controller'
+    'app.artist.controller',
+    'app.common.globals'
 ])
 
-.config(['$routeProvider',function ($routeProvider) {
+.config(['$routeProvider', 'directory', function ($routeProvider, directory) {
     $routeProvider
-        .when('/login', { templateUrl: 'common/login.html', controller: 'myCtrl' })
-        .when('/apitest', { templateUrl: 'common/apitest.html', controller: 'apiController' })
-        .when('/shop', { templateUrl: 'shop/shop.html', controller: 'shopController' })
-        .when('/upload', { templateUrl: 'shop/upload.html', controller: 'shopController' })
+        .when('/login', { templateUrl: directory.shared + 'login.html', controller: 'myCtrl' })
+        .when('/apitest', { templateUrl: directory.dev + 'apitest.html', controller: 'apiController' })
+        .when('/upload', { templateUrl: directory.cart + 'upload.html', controller: 'shopController' })
         .when('/artist', { name: 'artist', templateUrl: 'artist/artist.html', controller: 'artistController' })
-        .when('/albumupload/:artistID', { name: 'albumupload', templateUrl: 'artist/upload.html', controller: 'artistController' })
-        .when('/cart', { templateUrl: 'cart/cart.html', controller: 'myCtrl' })
+        .when('/shop', { templateUrl: directory.shop + 'shop.html', controller: 'shopController' })
+        .when('/cart', { templateUrl: directory.cart + 'cart.html', controller: 'myCtrl' })
 }]);
 
 app.controller ('myCtrl', ['$scope', '$http', 'ngCart', function($scope, $http, ngCart) {
@@ -25,4 +24,3 @@ app.controller ('myCtrl', ['$scope', '$http', 'ngCart', function($scope, $http, 
     var vm = this;
     vm.title = "HelloWorld!"
 }]);
-

@@ -21,7 +21,7 @@ span[ng-click] {
 .bottom30 { margin-bottom:30px; }
 .click { cursor: pointer; }
 
-.headroom {
+/*.headroom {
     transition: transform 200ms linear;
 }
 .headroom--pinned {
@@ -29,13 +29,13 @@ span[ng-click] {
 }
 .headroom--unpinned {
     transform: translateY(-100%);
-}
-.headroom .summary {
+}*/
+.summary {
   color: #ffffff;
   float: right;
   padding-top: 10px;
 }
-.headroom .icon path {
+.icon path {
   fill: #ffffff;
 }
 .header {
