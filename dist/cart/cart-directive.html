@@ -1,6 +1,0 @@
-<div class="alert alert-warning" role="alert" ng-show="ngCart.getTotalItems() === 0"> Your cart is empty </div> <div class="table-responsive col-lg-12" ng-show="ngCart.getTotalItems() > 0"> <table class="table table-striped ngCart cart"> <thead> <tr> <th> <th> <th>Quantity <th>Amount <th>Total   <tfoot> <tr ng-show="ngCart.getTax()"> <td> <td> <td> <td>Tax ({{ ngCart.getTaxRate() }}%): <td>{{ ngCart.getTax() | currency }}  <tr ng-show="ngCart.getShipping()"> <td> <td> <td> <td>Shipping: <td>{{ ngCart.getShipping() | currency }}  <tr> <td> <td> <td> <td>Total: <td>{{ ngCart.totalCost() | currency }}   <tbody> <tr ng-repeat="item in ngCart.getCart().items track by $index"> <td><span ng-click="ngCart.removeItemById(item.getId())" class="glyphicon glyphicon-remove"></span> <td>{{ item.getName() }} <td><span class="glyphicon glyphicon-minus" ng-class="{'disabled':item.getQuantity()==1}" ng-click="item.setQuantity(-1, true)"></span>&nbsp;&nbsp; {{ item.getQuantity() | number }}&nbsp;&nbsp; <span class="glyphicon glyphicon-plus" ng-click="item.setQuantity(1, true)"></span> <td>{{ item.getPrice() | currency}} <td>{{ item.getTotal() | currency }}   </table> </div> <style>.ngCart.cart span[ng-click] {
-        cursor: pointer;
-    }
-    .ngCart.cart .glyphicon.disabled {
-        color:#aaa;
-    }</style>

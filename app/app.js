@@ -11,7 +11,7 @@ var app = angular.module('app', [
     $routeProvider
         .when('/login', { templateUrl: directory.shared + 'login.html', controller: 'myCtrl' })
         .when('/apitest', { templateUrl: directory.dev + 'apitest.html', controller: 'apiController' })
-        .when('/upload', { templateUrl: 'shop/upload.html', controller: 'shopController' })
+        .when('/upload', { templateUrl: directory.cart + 'upload.html', controller: 'shopController' })
         .when('/shop', { templateUrl: directory.shop + 'shop.html', controller: 'shopController' })
         .when('/cart', { templateUrl: directory.cart + 'cart.html', controller: 'myCtrl' })
 }]);

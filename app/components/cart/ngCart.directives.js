@@ -22,7 +22,7 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
             transclude: true,
             templateUrl: function(element, attrs) {
                 if ( typeof attrs.templateUrl == 'undefined' ) {
-                    return 'cart/addtocart.html';
+                    return ngCart.path() + 'addtocart.html';
                 } else {
                     return attrs.templateUrl;
                 }
@@ -49,14 +49,14 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
         };
     }])
 
-    .directive('ngcartCart', [function(){
+    .directive('ngcartCart', ['ngCart', function(ngCart){
         return {
             restrict : 'E',
             controller : 'CartController',
             scope: {},
             templateUrl: function(element, attrs) {
                 if ( typeof attrs.templateUrl == 'undefined' ) {
-                    return 'cart/cart-directive.html';
+                    return ngCart.path() + 'cart-directive.html';
                 } else {
                     return attrs.templateUrl;
                 }
@@ -67,7 +67,7 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
         };
     }])
 
-    .directive('ngcartSummary', [function(){
+    .directive('ngcartSummary', ['ngCart', function(ngCart){
         return {
             restrict : 'E',
             controller : 'CartController',
@@ -75,7 +75,7 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
             transclude: true,
             templateUrl: function(element, attrs) {
                 if ( typeof attrs.templateUrl == 'undefined' ) {
-                    return 'cart/summary.html';
+                    return ngCart.path() + 'summary.html';
                 } else {
                     return attrs.templateUrl;
                 }
@@ -83,7 +83,7 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
         };
     }])
 
-    .directive('ngcartCheckout', [function(){
+    .directive('ngcartCheckout', ['ngCart', function(ngCart){
         return {
             restrict : 'E',
             controller : ('CartController', ['$rootScope', '$scope', 'ngCart', 'fulfilmentProvider', function($rootScope, $scope, ngCart, fulfilmentProvider) {
@@ -111,7 +111,7 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
             transclude: true,
             templateUrl: function(element, attrs) {
                 if ( typeof attrs.templateUrl == 'undefined' ) {
-                    return 'cart/checkout.html';
+                    return ngCart.path() + 'checkout.html';
                 } else {
                     return attrs.templateUrl;
                 }

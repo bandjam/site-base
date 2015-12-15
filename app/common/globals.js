@@ -6,11 +6,11 @@
 angular.module('app.common.globals', [])
 
 .constant('directory', (function(){
-  var componenetsDirectory = "components/";
+  var componentsDirectory = "components/";
   return {
+    cart: componentsDirectory + "cart/",
+    shop: componentsDirectory + "shop/",
     shared: "shared/",
-    cart: "cart/",
-    shop: "shop/",
     dev: "dev/"
   };
 })())
