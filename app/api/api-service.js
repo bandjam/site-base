@@ -90,7 +90,7 @@ function apiService(
             method: method,
             url: url,
             data: JSON.stringify(postdata),
-            actualConfig
+            config: actualConfig
         });
         httpPromise.success(function (data) {
             deferred.resolve(data);

@@ -332,14 +332,6 @@ module.exports = function (grunt) {
                 'bower_components/fancybox/source/*.{png,gif}',
               ],
               dest: '.tmp/styles'
-            },
-            {
-              expand: true,
-              flatten: true,
-              src: [
-                'bower_components/plupload/js/Moxie.*'
-              ],
-              dest: '<%= yeoman.dist %>'
             }
             ]
           },
