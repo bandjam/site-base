@@ -10,7 +10,7 @@ angular.module('app.common.globals', [])
   return {
     cart: componentsDirectory + "cart/",
     shop: componentsDirectory + "shop/",
-    artist: "artist/",
+    artist: componentsDirectory + "artist/",
     shared: "shared/",
     dev: "dev/"
   };

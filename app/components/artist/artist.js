@@ -122,10 +122,10 @@ angular.module('app.artist.controller', [
         },
      
         // Flash settings
-        flash_swf_url : '/bower_components/plupload/js/Moxie.swf',
+        flash_swf_url : '/shared/plupload/Moxie.swf',
      
         // Silverlight settings
-        silverlight_xap_url : '/bower_components/plupload/js/Moxie.xap',
+        silverlight_xap_url : '/shared/plupload/Moxie.xap',
          
         init: {
             PostInit: function() {
