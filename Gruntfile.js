@@ -399,7 +399,7 @@ module.exports = function (grunt) {
             }
           },
           cleanTestApi: {
-            command: 'cd /var/www/html/api; ls | grep -v tmp | xargs rm -rf',
+            command: 'cd /var/www/html/api; ls | egrep -v "tmp|uploads" | xargs rm -rf',
             options: {
               config: 'testServer',
               privateKey: '<%= testServerKey %>'

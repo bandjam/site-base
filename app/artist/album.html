@@ -1,0 +1,26 @@
+<div class="well well-sm">
+    <strong>Category Title</strong>
+    <div class="btn-group">
+        <a href="" id="list" class="btn btn-default btn-sm" ng-click="toggleListView('list')"><span class="glyphicon glyphicon-th-list"></span>List</a> 
+        <a href="" id="grid" class="btn btn-default btn-sm" ng-click="toggleListView('grid')"><span class="glyphicon glyphicon-th"></span>Grid</a>
+    </div>
+</div>
+<div id="products" class="row list-group">
+    <div class="item col-xs-4 col-lg-4 click" ng-class="(ViewData.ListView == 'grid') ? 'grid-group-item' : 'list-group-item'" ng-repeat="o in ViewData.albums" ng-click="go('/albumupload/' + o.AlbumID)">
+        <div class="thumbnail">
+            <img class="group list-group-image" src="http://placehold.it/400x250/000/fff" alt="" />
+            <div class="caption">
+                <h4 class="group inner list-group-item-heading" ng-bind="o.AlbumName"></h4>
+                <p class="group inner list-group-item-text">Product description... Lorem ipsum dolor sit amet, ctetuer sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                        <p class="lead">$21.000</p>
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+                        <a class="btn btn-success" href="http://www.jquery2dotnet.com">Add to cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
