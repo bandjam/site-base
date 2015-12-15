@@ -9,10 +9,11 @@ var app = angular.module('app', [
 
 .config(['$routeProvider', 'directory', function ($routeProvider, directory) {
     $routeProvider
-        .when('/login', { templateUrl: directory.ViewPartialsDirectory + 'login.html', controller: 'myCtrl' })
-        .when('/apitest', { templateUrl: directory.DevPartialsDirectory + 'apitest.html', controller: 'apiController' })
-        .when('/shop', { templateUrl: directory.ViewPartialsDirectory + 'shop.html', controller: 'shopController' })
-        .when('/cart', { templateUrl: directory.ViewPartialsDirectory + 'cart.html', controller: 'myCtrl' })
+        .when('/login', { templateUrl: directory.shared + 'login.html', controller: 'myCtrl' })
+        .when('/apitest', { templateUrl: directory.dev + 'apitest.html', controller: 'apiController' })
+        .when('/upload', { templateUrl: 'shop/upload.html', controller: 'shopController' })
+        .when('/shop', { templateUrl: directory.shop + 'shop.html', controller: 'shopController' })
+        .when('/cart', { templateUrl: directory.cart + 'cart.html', controller: 'myCtrl' })
 }]);
 
 app.controller ('myCtrl', ['$scope', '$http', 'ngCart', function($scope, $http, ngCart) {

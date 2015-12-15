@@ -6,11 +6,12 @@
 angular.module('app.common.globals', [])
 
 .constant('directory', (function(){
-  var viewDirectory = "views/";
+  var componenetsDirectory = "components/";
   return {
-    ViewDirectory: viewDirectory,
-    ViewPartialsDirectory: viewDirectory + "partials/",
-    DevPartialsDirectory: viewDirectory + "dev/"
+    shared: "shared/",
+    cart: "cart/",
+    shop: "shop/",
+    dev: "dev/"
   };
 })())
 

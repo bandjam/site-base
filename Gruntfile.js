@@ -329,9 +329,17 @@ module.exports = function (grunt) {
               flatten: true,
               src: [
                 'bower_components/jplayer/skin/pink.flag/*.{jpg,gif,png}',
-                'bower_components/fancybox/source/*.{png,gif}'
+                'bower_components/fancybox/source/*.{png,gif}',
               ],
               dest: '.tmp/styles'
+            },
+            {
+              expand: true,
+              flatten: true,
+              src: [
+                'bower_components/plupload/js/Moxie.*'
+              ],
+              dest: '<%= yeoman.dist %>'
             }
             ]
           },
@@ -430,15 +438,6 @@ module.exports = function (grunt) {
 
     });
 
-
-    // Load the plugin that provides the "uglify" task.
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-karma');
-
     grunt.registerTask('build', [
         'clean:dist',
         'wiredep:app',
@@ -481,8 +480,6 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('devmode', ['karma:unit', 'watch']);
     grunt.registerTask('testunit', ['karma:unit']);
-
-
     //grunt.registerTask('default', ['test', 'build']);
 
 
