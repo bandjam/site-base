@@ -65,29 +65,30 @@ angular.module('app.artist.controller', [
         utils.go(url);
     }
 
-    /**
-     * Handles error notifications in case of a subsonic error or an HTTP error. Sets a 'serviceError' flag when
-     * it is neither.
-     * @param  {Promise} promise a Promise that must be resolved or rejected with an object : {'reason': a message that can be displayed to a user, 'httpError': the HTTP error code, 'subsonicError': the error Object sent by Subsonic}
-     * @return {Promise}         the original promise passed as argument. That way we can chain it further !
-     */
-    // TODO: Hyz: Move this to a response interceptor ?
-    $scope.handleErrors = function (promise) {
-        promise.then(null, function (error) {
-            var errorNotif;
-            if (error.subsonicError !== undefined) {
-                errorNotif = error.reason + ' ' + error.subsonicError.message;
-            } else if (error.httpError !== undefined) {
-                errorNotif = error.reason + ' HTTP error ' + error.httpError;
-            } else {
-                error.serviceError = true;
-            }
-            if (error.subsonicError !== undefined || error.httpError !== undefined) {
-                //notifications.updateMessage(errorNotif, true);
-            }
-        });
-       return promise;
-    };
+    function handleRequest(res) {
+        var token = res.data ? res.data.token : null;
+        if(token) { console.log('JWT:', token); }
+        self.message = res.data.message;
+    }
+
+    function login() {
+        api.login(self.username, self.password)
+          .then(handleRequest, handleRequest)
+    }
+    function register() {
+        api.register(self.username, self.password)
+          .then(handleRequest, handleRequest)
+    }
+    function getQuote() {
+        auth.getQuote()
+          .then(handleRequest, handleRequest)
+    }
+    function logout() {
+        auth.logout && auth.logout()
+    }
+    function isAuthed() {
+        return auth.isAuthed ? auth.isAuthed() : false
+    }
 
     /* Launch on Startup */
     /* End Startup */
