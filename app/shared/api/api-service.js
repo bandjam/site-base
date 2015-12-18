@@ -28,10 +28,12 @@ function apiService(
 
     var self = this;
     _.extend(self, {
-        getArtists           : getArtists,
-        test                 : test,
-        ping                 : ping,
-        apiRequest      : apiRequest
+        getArtists: getArtists,
+        test: test,
+        ping: ping,
+        login: login,
+        register: register,
+        apiRequest: apiRequest
     });
 
     // TODO: Hyz: Remove when refactored
@@ -107,6 +109,23 @@ function apiService(
 
     function ping() {
         return self.apiRequest('ping.view');
+    }
+
+    function login(credentials) {
+        return $http
+          .post('/login', credentials)
+          .then(function (res) {
+            Session.create(res.data.id, res.data.user.id,
+                           res.data.user.role);
+            return res.data.user;
+          });
+    };
+
+    function register(username, password) {
+      return $http.post(API + '/auth/register', {
+          username: username,
+          password: password
+        })
     }
 
     function getMusicFolders() {
