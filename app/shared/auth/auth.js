@@ -4,13 +4,13 @@
 * Access and use the Subsonic Server. The Controller is in charge of relaying the Service's messages to the user through the
 * notifications.
 */
-angular.module('app.artist.controller', [
+angular.module('app.auth.controller', [
     'ngLodash',
     'app.utils',
-    'app.api.service'
+    'app.auth.service'
 ])
 
-.controller('artistController', [
+.controller('authController', [
     '$scope',
     '$rootScope',
     '$route',
@@ -20,6 +20,9 @@ angular.module('app.artist.controller', [
     'lodash',
     'utils',
     'api',
+    'auth',
+    'session',
+    'AUTH_EVENTS',
     function ( 
         $scope,
         $rootScope,
@@ -29,36 +32,33 @@ angular.module('app.artist.controller', [
         $window,
         _,
         utils,
-        api
+        api,
+        auth,
+        session,
+        AUTH_EVENTS
     ) {
     'use strict';
 
     _.extend($scope, {
         FormData: {
+            Login: {
+                UserName: "test",
+                UserPassword: "test"
+            },
+            Register: {
+                UserName: "",
+                UserPassword: "",
+                UserEmail: ""
+            }
         },
         ViewData: { 
         },
-        go: go
+        go: go,
+        login: login,
+        register: register
     });
 
     function init () {
-    };
-
-        // fire on controller loaded
-
-    function login() {
-        var data = { 'AlbumName': $scope.FormData.AlbumName };
-        var promise = api.apiRequest('addAlbum', 'POST', data);
-        $scope.handleErrors(promise).then(function (data) {
-            getAlbums();
-            $scope.albumForm.$setPristine();
-            $scope.FormData.AlbumName = "";
-        }, function (error) {
-            if (error.serviceError === true) {
-                //notifications.updateMessage(error.reason, true);
-            }
-        });
-        return false;
     };
 
     function go(url) {
@@ -68,26 +68,31 @@ angular.module('app.artist.controller', [
     function handleRequest(res) {
         var token = res.data ? res.data.token : null;
         if(token) { console.log('JWT:', token); }
-        self.message = res.data.message;
+        //self.message = res.data.message;
     }
 
     function login() {
-        api.login(self.username, self.password)
-          .then(handleRequest, handleRequest)
+        var username = $scope.FormData.UserName;
+        var password = $scope.FormData.UserPassword;
+        auth.login(username, password).then(function (res) {
+            session.create(res.data.userID, res.data.userName, res.data.userRole);
+            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+            $scope.setCurrentUser(res.data.user);
+        }, function () {
+          $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+        });
     }
     function register() {
-        api.register(self.username, self.password)
-          .then(handleRequest, handleRequest)
-    }
-    function getQuote() {
-        auth.getQuote()
-          .then(handleRequest, handleRequest)
+        auth.register($scope.FormData.Register).then(function (res) {
+            session.create(res.data.userID, res.data.userName, res.data.userRole);
+            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+            $scope.setCurrentUser(res.data.user);
+        }, function () {
+          $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+        });
     }
     function logout() {
         auth.logout && auth.logout()
-    }
-    function isAuthed() {
-        return auth.isAuthed ? auth.isAuthed() : false
     }
 
     /* Launch on Startup */

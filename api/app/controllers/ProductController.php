@@ -1,6 +1,7 @@
 <?php
 
 class ProductController extends Controller{
+
 	function render(){
 
         //$template=new Template;
@@ -8,15 +9,82 @@ class ProductController extends Controller{
 	}
 
 	function beforeroute(){
+		return $this->checkToken();
 	}
 
-	function test() {
+	function addProduct() {
+		$p = new Product($this->db);
+		$post = json_decode($this->f3->get('BODY'), true);
+		$type = $post['ProductType'];
+		$p->UserID = $post['UserID'];
+		switch ($type) {
+		    case "album":
+				//$album->AlbumName = $this->f3->get('POST.AlbumName');
+				$p->ProductName = $post['AlbumName'];
+				$p->ProductType = "album";
+				$p->ProductPrice = 0;
+				$p->OptionGroupID = 1;
+		    break;
+	    } 
+	    $p->save();
+		echo $this->utils->successResponse($p, null);
+	}
 
-		$product = new Product($this->db);
-		//$product->getById(1);
-		$list = array_map(array($product,'cast'),$product->all());
-		//$product->getByName('Book the First');
-		//$product->showDataInJSON($product->cast());
-		echo json_encode($list);
+	function editProduct($post) {
+		$ProductID = $this->f3->get('PARAMS.ProductID');
+		$post = json_decode($this->f3->get('BODY'), true);
+		$p = new Product($this->db);
+		$products = $p->getById($this->userID, $ProductID);
+		$product = $products[0];
+		$product->ProductName = $post['ProductName'];
+		$product->ProductDesc = filter_var($post['ProductDesc'], FILTER_SANITIZE_STRING);
+		$product->ProductPrice = $post['ProductPrice'];
+		if ($this->debug) {
+			$this->utils->debug(__METHOD__, $product->cast());
+		}
+	    $product->save();
+		echo $this->utils->successResponse($product, null);
+	}
+
+	function getProducts() {
+		$ProductID = $this->f3->get('PARAMS.ProductID');
+
+		$p = new Product($this->db);
+		//$products = $product->all();
+		if (isset($ProductID)) {
+			$products = $p->getById($this->userID, $ProductID);
+		} else {
+			$products = $p->all($this->userID);
+		}
+		echo $this->utils->successResponse($p, $products);
+	}
+
+	function getTracks() {
+		$ProductID = $this->f3->get('PARAMS.ProductID');
+		$album = new AlbumTrack($this->db);
+		$tracks = $album->getByProductId($ProductID);
+		echo $this->utils->successResponse($album, $tracks);
+	}
+
+	function editTrack() {
+		$AlbumTrackID = $this->f3->get('PARAMS.AlbumTrackID');
+		$post = json_decode($this->f3->get('BODY'), true);
+		$album = new AlbumTrack($this->db);
+		$track = $album->getById($AlbumTrackID);
+		$track->TrackName = $post['TrackName'];
+		echo $this->utils->successResponse($track, null);
+	}
+
+	function deleteTrack() {
+		$AlbumTrackID = $this->f3->get('PARAMS.AlbumTrackID');
+		$album = new AlbumTrack($this->db);
+		$tracks = $album->getById($AlbumTrackID);
+		foreach($tracks as $track) {
+			$file = $this->f3->get('UPLOADS') . $track->FileName;
+			if (file_exists($file)) {
+				unlink($file);
+			}
+			$album->delete($AlbumTrackID);
+		}
 	}
 }

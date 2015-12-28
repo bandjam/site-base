@@ -6,13 +6,13 @@ class Product extends DB\SQL\Mapper{
 	    parent::__construct($db,'products');
 	}
 	
-	public function all() {
-	    $this->load();
+	public function all($UserID) {
+	    $this->load(array('UserID=?',$UserID));
 	    return $this->query;
 	}
 
-	public function getById($id) {
-	    $this->load(array('ProductID=?',$id));
+	public function getById($UserID, $id) {
+	    $this->load(array('UserID=? AND ProductID=?', $UserID, $id));
 	    return $this->query;
 	}
 
@@ -26,7 +26,7 @@ class Product extends DB\SQL\Mapper{
 	}
 	
 	public function edit($id) {
-	    $this->load(array('data->>ProductID=?',$id));
+	    $this->load(array('ProductID=?',$id));
 	    $this->copyFrom('POST');
 	    $this->update();
 	}

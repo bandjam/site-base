@@ -14,11 +14,12 @@ angular.module('app.common.globals', [])
     artist: componentsDirectory + "artist/",
     shared: sharedDirectory,
     auth: sharedDirectory + "auth/",
+    common: sharedDirectory + "common/",
     dev: "dev/"
   };
 })())
 
-.constant('API', 'http://web02/api')
+.constant('API', 'http://web02/api/')
 
 .constant('AUTH_EVENTS', {
   loginSuccess: 'auth-login-success',

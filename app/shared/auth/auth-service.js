@@ -6,7 +6,8 @@
 */
 angular.module('app.auth.service', [
     'ngLodash',
-    'app.common.globals'
+    'app.common.globals',
+    'app.api.service'
 ])
 
 .service('auth', authService)
@@ -14,7 +15,7 @@ angular.module('app.auth.service', [
 .factory('authInterceptor', authInterceptor);
 
 /* authService */
-function authService($q, $window, globals, session) {
+function authService($q, $window, $injector, globals, session) {
     var self = this;
 
     self.parseJwt = function(token) {
@@ -24,11 +25,19 @@ function authService($q, $window, globals, session) {
     }
 
     self.saveToken = function(token) {
-      $window.localStorage['jwtToken'] = token;
+      $window.localStorage['jwtToken'] = JSON.stringify(token);
     }
 
     self.getToken = function() {
-      return $window.localStorage['jwtToken'];
+        var jwt = $window.localStorage['jwtToken'];
+        jwt = JSON.parse(jwt);
+        return jwt.token;
+    }
+
+    self.getTokenData = function() {
+        var jwt = $window.localStorage['jwtToken'];
+        jwt = JSON.parse(jwt);
+        return jwt.data;
     }
 
     self.isAuthenticated = function() {
@@ -53,19 +62,36 @@ function authService($q, $window, globals, session) {
     self.logout = function() {
       $window.localStorage.removeItem('jwtToken');
     }
+
+    self.login = function(UserName, UserPassword) {
+        // Manually inject api to resolve circular dependency
+        var api = $injector.get('api');
+        var credentials = { UserName: UserName, UserPassword: UserPassword }
+        var promise;
+        promise = api.apiRequest('/login', 'POST', credentials);
+        return promise;
+    };
+
+    self.register = function(Register) {
+        // Manually inject api to resolve circular dependency
+        var api = $injector.get('api');
+        var promise;
+        promise = api.apiRequest('/register', 'POST', Register);
+        return promise;
+    }
 }
 
 /* Session */
 function Session($q) {
     return {
-        create: function(sessionId, userId, userRole) {
-            this.id = sessionId;
-            this.userId = userId;
-            this.userRole = userRole;
+        create: function(User) {
+            this.userID = User.userID;
+            this.userName = User.userName;
+            this.userRole = User.userRole;
         },        
         destroy: function() {
-            this.id = null;
-            this.userId = null;
+            this.userID = null;
+            this.userName = null;
             this.userRole = null;
         }
     }
@@ -86,7 +112,7 @@ function authInterceptor($rootScope, $q, AUTH_EVENTS, API, auth) {
 
         response: function(res){
           if(res.config.url.indexOf(API) === 0 && res.data.token) {
-            auth.saveToken(res.data.token);
+            auth.saveToken(res.data);
           }
 
           return res;
@@ -95,7 +121,7 @@ function authInterceptor($rootScope, $q, AUTH_EVENTS, API, auth) {
         request: function(config){
           var token = auth.getToken();
           if(config.url.indexOf(API) === 0 && token) {
-            config.headers.Authorization = 'Bearer ' + token;
+            config.headers.authorization = 'Bearer ' + token;
           }
 
           return config;

@@ -1,48 +1,158 @@
 <?php
 
 class UploadController extends Controller{
+	public static $uploadTypes;
+	public static $uploadType;
+	public static $uploadGroup;
+	public static $id;
+	public static $uploadDir;
+
+	function render(){
+
+        //$template=new Template;
+        //echo $template->render('login.htm');
+	}
+
+	function beforeroute(){
+		return $this->checkToken();
+	}
+
 	function createAlbum($file) {
 		$album = new Album($this->db);
 		$album->AlbumName = $file['name'];
 		//var_dump($album->cast());
 	}
-	function uploadff() {
+
+	public function getUploadPath($type, $id) {
+		$path = $this->uploadRoot . $type . '/' . substr($id, 0, 1) . '/' . $id . '/';
+		return $path;
+	}
+
+	private function resizeImage($source, $destination, $size) {
+		$cmd = 'convert "' . $source . '" -resize "' . $size . '" "' . $destination . '" 2>&1';
+		//echo $cmd;
+		$output = shell_exec($cmd);
+		if ($this->debug) {
+			$this->utils->debug(__METHOD__, $cmd);
+			$this->utils->debug(__METHOD__, $output);
+		}
+		return $output;
+	}
+
+	public function handleUpload($file, $uploadDir, $uploadType, $id) {
+		$fileName = $this->f3->get('POST.name');
+		$fileBaseName = pathinfo($fileName, PATHINFO_FILENAME);
+        $fileType = pathinfo($file['name'], PATHINFO_EXTENSION);
+		$slugName = basename($file['name']);
+		$slugBaseName = pathinfo($slugName, PATHINFO_FILENAME);
+		$uploadDirFull = $this->docRoot . $uploadDir;
+		$fileFullPath = $uploadDir . $slugName;
+
+		if (!file_exists($uploadDirFull)) {
+			$cmd = 'mkdir -p ' . $uploadDirFull;
+			$output = shell_exec($cmd);
+		}
+
+		if ($this->debug) {
+			$this->utils->debug(__METHOD__, $fileFullPath);
+			$this->utils->debug(__METHOD__, $cmd);
+			$this->utils->debug(__METHOD__, $output);
+		}
+
+		switch ($uploadType) {
+		    case "track":
+		        $track = new AlbumTrack($this->db);
+	            // Extract ID3 tags using getID3 engine
+	        	$fileTypes = array("mp3");
+				if (in_array($fileType, $fileTypes)) {
+					$getID3 = new getID3;
+	    			// Currently using tmp_name, actual file gets created after handler runs
+					$tags = $getID3->analyze($file['tmp_name']);
+					if (isset($tags['tags']['id3v1'])) {
+						$track->TrackName = $tags['tags']['id3v1']['title'][0];
+						$track->TrackNumber = $tags['tags']['id3v1']['track'][0];
+					}
+				} else {
+		    		$track->TrackName = $fileBaseName;
+				}
+
+				$track->ProductID = $id;
+		        $track->FileName = $fileFullPath;
+		        $track->Size = $file['size'];
+		        if ($this->debug) {
+					$this->utils->debug(__METHOD__, $track->cast());
+				}
+			    $track->save();
+				echo $this->utils->successResponse($track, null);
+		        break;
+		    case "cover":
+		    	// Currently using tmp_name, actual file gets created after handler runs
+		        $product = new Product($this->db);
+		        $product->getById($this->userID, $id);
+		        $product->ProductImage = $fileFullPath;
+		        if ($this->debug) {
+					$this->utils->debug(__METHOD__, $product->cast());
+				}
+		        $product->update();
+		    	$source = $file['tmp_name'];
+		    	$dest = $uploadDirFull . $slugBaseName . '_small' . '.' . $fileType;
+		    	// Set WxH
+		    	//$size = "400x250";
+		    	// Set width only
+		    	$size = "400";
+		    	$output = $this->resizeImage($source, $dest, $size);
+		    	if ($output == "") {
+					echo $this->utils->successResponse($dest, null);
+				}
+		        break;
+	        default:
+	        	break;
+		}
+	}
+
+	public function generateSlug($fileBaseName) {
 		$web = \Web::instance();
-		$overwrite = false; // set to true, to overwrite an existing file; Default: false
-		$slug = true; // rename file to filesystem-friendly version
+		$baseName = $web->slug(pathinfo($fileBaseName, PATHINFO_FILENAME));
+		$fileType = pathinfo($fileBaseName, PATHINFO_EXTENSION);
+		$name = strtolower($baseName . '.' . $fileType);
+		return $name;
+	}
 
-		$files = $web->receive(function($file,$formFieldName){
-		        //var_dump($file);
-				//$this->createAlbum($file);
-	    		echo json_encode($file);
-				/* looks like:
-		          array(5) {
-		              ["name"] =>     string(19) "csshat_quittung.png"
-		              ["type"] =>     string(9) "image/png"
-		              ["tmp_name"] => string(14) "/tmp/php2YS85Q"
-		              ["error"] =>    int(0)
-		              ["size"] =>     int(172245)
-		            }
-		        */
-		        // $file['name'] already contains the slugged name now
-		        // maybe you want to check the file size
-		        //if($file['size'] > (2 * 1024 * 1024)) // if bigger than 2 MB
-		            //return false; // this file is not valid, return false will skip moving it
-
-		        return true; // allows the file to be moved from php tmp dir to your defined upload dir
-		    },
+	public function upload() {
+		$web = \Web::instance();
+		$overwrite = true; // set to true, to overwrite an existing file; Default: false
+		//$slug = true; // rename file to filesystem-friendly version
+		self::$uploadTypes = array(
+			"cover" => "album",
+			"track" => "album"
+		);
+		self::$uploadType = $this->f3->get('POST.uploadType');
+		self::$uploadGroup = self::$uploadTypes[self::$uploadType];
+		self::$id = $this->f3->get('POST.id');
+		self::$uploadDir = $this->getUploadPath(self::$uploadGroup, self::$id);
+		$this->f3->set('UPLOADS', self::$uploadDir);
+		// Execute callback handleUpload on successful upload
+		$files = $web->receive(function($file){
+				$this->handleUpload($file, self::$uploadDir, self::$uploadType, self::$id);
+				return true;
+			},
 		    $overwrite,
-		    $slug
+		    function($fileBaseName, $formFieldName) {
+				return $this->generateSlug($fileBaseName);
+			}
 	    );
-	    //var_dump($files);
 	    foreach ($files as $key => $val) {
 		    if (!$val) {
-    			die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to upload ' . $key . '."}, "id" : "id"}');
-	    	//http_response_code(404);
+    			$error = array(
+					'code' => "101",
+					'message' => "Failed to upload " . pathinfo($key, PATHINFO_FILENAME)
+				);
+				echo $this->utils->errorResponse($error);
 		    }
 		}
 	}
-	function upload($file) {
+
+	function uploadexample($file) {
 		/**
 		 * upload.php
 		 *

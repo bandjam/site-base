@@ -23,6 +23,19 @@
   <body>
     <div ng-app="app" ng-controller="myCtrl as main">
       <div class="container">
+        <div class="alert-fixed" ng-show="notifications.length > 0">
+          <div class="panel panel-default panel-notifications box-shadow--4dp">
+            <div class="panel-heading">
+              <h3 class="panel-title">Notifications</h3>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-success" role="alert" ng-repeat="o in notifications">
+                  <a class="close" aria-label="close" ng-click="removeNotification(o)">&times;</a>
+                  <div id="{{ o.id }}">{{ o.text }}</div>
+                </div>
+            </div>
+          </div>
+        </div>
         <nav class="navbar navbar-inverse navbar-fixed-top">
           <div class="container">
             <div class="navbar-header">
@@ -36,24 +49,26 @@
             </div>
             <div id="navbar" class="collapse navbar-collapse">
               <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
+                <li class=""><a href="#">Home</a></li>
                 <li><a href="#/shop">Shop</a></li>
-                <li><a href="#/artist">Artist</a></li>
+                <li><a href="#/artist" ng-class="{ active: $route.current.activetab == 'artist' }">Artist</a></li>
                 <li><a href="#/about">About</a></li>
                 <li><a href="#/contact">Contact</a></li>
-                <li><a href="#/login">Login</a></li>
                 <li><a href="#/cart">Cart</a></li>
               </ul>
-              <ngcart-summary></ngcart-summary>
+              <ul class="nav navbar-nav floatright">
+                <li><a href="#/login" ng-hide="isAuthenticated" ng-class="{ active: $route.current.activetab == 'login' }">Login</a></li>
+                <li><a href="#/register" ng-hide="isAuthenticated" ng-class="{ active: $route.current.activetab == 'register' }">Register</a></li>
+                <li><a href="#/account" ng-show="isAuthenticated" ng-class="{ active: $route.current.activetab == 'account' }">{{ currentUser.userName }}</a></li>
+                <li><ngcart-summary></ngcart-summary></li>
+              </ul>
             </div><!--/.nav-collapse -->
           </div>
         </nav>
 
         <div class="header">
-          <h1>Bootstrap starter template</h1>
-          <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+          <h1></h1>
         </div>
-        <hr />
 
         <div ng-view></div>
       </div><!-- /.container -->
@@ -76,9 +91,12 @@
     <script src="components/cart/ngCart.directives.js"></script>
     <script src="components/shop/shop.js"></script>
     <script src="components/artist/artist.js"></script>
+    <script src="shared/plupload/plupload-directive.js"></script>
     <script src="shared/plupload/plupload.full.min.js"></script>
+    <script src="shared/auth/auth.js"></script>
     <script src="shared/auth/auth-service.js"></script>
     <script src="shared/api/api-service.js"></script>
+    <script src="shared/common/utils-directive.js"></script>
     <script src="shared/common/utils-service.js"></script>
     <script src="shared/common/globals.js"></script>
     <script src="app.js"></script>

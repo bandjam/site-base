@@ -1,0 +1,9 @@
+{
+    "require": {
+        "php": ">=5.4",
+    	"composer/installers": "v1.0.12",
+    	"firebase/php-jwt": "*",
+    	"firebase/token-generator": "*",
+    	"james-heinrich/getid3": "*"
+    }
+}

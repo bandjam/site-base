@@ -35,19 +35,20 @@ class Album extends DB\SQL\Mapper{
 		$album->save();
 	}
 	
-	public function edit($id) {
-	    $this->load(array('data->>AlbumID=?',$id));
-	    $this->copyFrom('POST');
-	    $this->update();
+	public function edit($id, $album) {
+		$item = $this->load(array('AlbumID=?', $id));
+		if ($item) {
+			if (!isset($album)) {
+		    	$item->copyFrom('POST');
+			} else {
+		    	$item->copyFrom($album);
+			}
+		    $item->update();
+		}
 	}
 	
 	public function delete($id) {
 	    $this->load(array('AlbumID=?',$id));
 	    $this->erase();
 	}
-
-	public function showDataInJSON(){
-    	header("Content-Type: application/json", true);
-    	echo json_encode($this);
-    }
 }

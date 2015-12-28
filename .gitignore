@@ -15,6 +15,7 @@ site.conf
 *.svn
 *.bat
 *.sublime-project
+*.sublime-workspace
 
 ###################
 *.com

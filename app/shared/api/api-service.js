@@ -28,12 +28,9 @@ function apiService(
 
     var self = this;
     _.extend(self, {
-        getArtists: getArtists,
         test: test,
-        ping: ping,
-        login: login,
-        register: register,
-        apiRequest: apiRequest
+        apiRequest: apiRequest,
+        handleErrors: handleErrors
     });
 
     // TODO: Hyz: Remove when refactored
@@ -65,7 +62,6 @@ function apiService(
         var deferred = $q.defer();
         var actualUrl = (partialUrl.charAt(0) === '/') ? partialUrl : '/' + partialUrl;
         var url = globals.BaseURL() + actualUrl;
-        console.log(postdata);
         // Extend the provided config (if it exists) with our params
         // Otherwise we create a config object
         var actualConfig = config || {};
@@ -96,81 +92,40 @@ function apiService(
         });
         httpPromise.success(function (data) {
             deferred.resolve(data);
-        }).error(function (data, status) {
-            exception.httpError = status;
-            deferred.reject(exception);
+        }).error(function (error) {
+            //exception.httpError = status;
+            deferred.reject(error);
         });
         return deferred.promise;
     }
 
-    function test() {
-        return self.apiRequest('test');
-    }
 
-    function ping() {
-        return self.apiRequest('ping.view');
-    }
-
-    function login(credentials) {
-        return $http
-          .post('/login', credentials)
-          .then(function (res) {
-            Session.create(res.data.id, res.data.user.id,
-                           res.data.user.role);
-            return res.data.user;
-          });
+    /**
+     * Handles error notifications in case of a subsonic error or an HTTP error. Sets a 'serviceError' flag when
+     * it is neither.
+     * @param  {Promise} promise a Promise that must be resolved or rejected with an object : {'reason': a message that can be displayed to a user, 'httpError': the HTTP error code, 'subsonicError': the error Object sent by Subsonic}
+     * @return {Promise}         the original promise passed as argument. That way we can chain it further !
+     */
+    // TODO: Hyz: Move this to a response interceptor ?
+    function handleErrors(promise) {
+        promise.then(null, function (error) {
+            var errorNotif;
+            if (error.subsonicError !== undefined) {
+                errorNotif = error.reason + ' ' + error.subsonicError.message;
+            } else if (error.httpError !== undefined) {
+                errorNotif = error.reason + ' HTTP error ' + error.httpError;
+            } else {
+                error.serviceError = true;
+            }
+            if (error.subsonicError !== undefined || error.httpError !== undefined) {
+                //notifications.updateMessage(errorNotif, true);
+            }
+        });
+       return promise;
     };
 
-    function register(username, password) {
-      return $http.post(API + '/auth/register', {
-          username: username,
-          password: password
-        })
-    }
-
-    function getMusicFolders() {
-        var exception = { reason: 'No music folder found on the Subsonic server.' };
-        var promise = self.apiRequest('getMusicFolders.view', {
-            cache: true
-        }).then(function (subsonicResponse) {
-            if (subsonicResponse.musicFolders !== undefined && subsonicResponse.musicFolders.musicFolder !== undefined) {
-                return [].concat(subsonicResponse.musicFolders.musicFolder);
-            } else {
-                return $q.reject(exception);
-            }
-        });
-        return promise;
-    }
-
-    function getArtists(folder) {
-        var exception = { reason: 'No artist found on the Subsonic server.' };
-        var params;
-        if (! isNaN(folder)) {
-            params = {
-                musicFolderId: folder
-            };
-        }
-        var promise = self.apiRequest('getIndexes.view', {
-            cache: true,
-            params: params
-        }).then(function (subsonicResponse) {
-            if (subsonicResponse.indexes !== undefined && (subsonicResponse.indexes.index !== undefined || subsonicResponse.indexes.shortcut !== undefined)) {
-                // Make sure shortcut, index and each index's artist are arrays
-                // because Madsonic will return an object when there's only one element
-                var formattedResponse = {};
-                formattedResponse.shortcut = [].concat(subsonicResponse.indexes.shortcut);
-                formattedResponse.index = [].concat(subsonicResponse.indexes.index);
-                _.map(formattedResponse.index, function (index) {
-                    var formattedIndex = index;
-                    formattedIndex.artist = [].concat(index.artist);
-                    return formattedIndex;
-                });
-                return formattedResponse;
-            } else {
-                return $q.reject(exception);
-            }
-        });
-        return promise;
+    function test() {
+        return self.apiRequest('test');
     }
 
 }

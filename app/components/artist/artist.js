@@ -6,28 +6,33 @@
 */
 angular.module('app.artist.controller', [
     'ngLodash',
+    'app.common.globals',
     'app.utils',
+    'app.utils.directive',
+    'app.plupload.directive',
     'app.api.service'
 ])
 
 .controller('artistController', [
     '$scope',
-    '$rootScope',
     '$route',
     '$routeParams',
     '$location',
     '$window',
+    '$timeout',
     'lodash',
+    'globals',
     'utils',
     'api',
     function ( 
         $scope,
-        $rootScope,
         $route,
         $routeParams,
         $location,
         $window,
+        $timeout,
         _,
+        globals,
         utils,
         api
     ) {
@@ -35,38 +40,56 @@ angular.module('app.artist.controller', [
 
     _.extend($scope, {
         FormData: {
-            AlbumName: ""
+            AlbumName: "",
+            ProductType: "album",
+            Product: {
+                ProductName: "",
+                ProductDesc: "",
+                ProductPrice: ""
+            }
         },
         ViewData: { 
-            albums: [ { AlbumName: "TestAlbum"} ],
+            product: null,
+            products: [],
+            tracks: [],
             ListView: "grid" ,
-            artistID: ""
+            albumID: "",
+            trackUpload: null,
+            coverUpload: null
         },
         go: go,
         toggleListView: toggleListView,
-        uploader: uploader,
         addAlbum: addAlbum,
+        editProduct: editProduct,
+        editTrack: editTrack,
+        deleteTrack: deleteTrack,
     });
 
     function init () {
-        if ($routeParams.artistID) {
-            $scope.ViewData.artistID = $routeParams.artistID;
+        if ($routeParams.productID) {
+            $scope.ViewData.productID = $routeParams.productID;
         }
         if ($route.current.$$route.name == 'artist') {
-            getAlbums();
+            getProducts();
         }
-        if ($route.current.$$route.name == 'albumupload') {
-            uploader.init();
+        if ($route.current.$$route.name == 'editproduct') {
+            getProduct($routeParams.productID);
+            getTracks($routeParams.productID);
+        }
+        if ($route.current.$$route.name == 'uploadtracks') {
+            //uploader.init();
         }
     };
 
-        // fire on controller loaded
-
     function addAlbum() {
-        var data = { 'AlbumName': $scope.FormData.AlbumName };
-        var promise = api.apiRequest('addAlbum', 'POST', data);
-        $scope.handleErrors(promise).then(function (data) {
-            getAlbums();
+        var data = { 
+            'UserID': $scope.currentUser,
+            'AlbumName': $scope.FormData.AlbumName,
+            'ProductType': 'album'
+        };
+        var promise = api.apiRequest('addProduct', 'POST', data);
+        api.handleErrors(promise).then(function (data) {
+            getProducts();
             $scope.albumForm.$setPristine();
             $scope.FormData.AlbumName = "";
         }, function (error) {
@@ -79,31 +102,106 @@ angular.module('app.artist.controller', [
 
     function go(url) {
         utils.go(url);
-    }
+    };
 
-    function getAlbums(id) {
+    function getProduct(ProductID) {
         var promise;
-        if (isNaN(id)) {
-            promise = api.apiRequest('getAlbums', 'GET');
-        } else {
-            promise = api.apiRequest('getAlbums?id=' + id, 'GET');
+        if (!isNaN(ProductID)) {
+            promise = api.apiRequest('getProduct/' + ProductID, 'GET');
         }
-        $scope.handleErrors(promise).then(function (data) {
-            $scope.ViewData.albums = data;
-        }, function (error) {
-            $scope.ViewData.albums = [];
-            if (error.serviceError === true) {
-                //notifications.updateMessage(error.reason, true);
-            }
+        api.handleErrors(promise).then(function (response) {
+            $scope.ViewData.product = response.data[0];
+        }, function (response) {
+            $scope.ViewData.product = null;
+            $scope.$emit('addNotification', response.data);
         });
+    };
+
+    function getProducts() {
+        var promise;
+        promise = api.apiRequest('getProducts', 'GET');
+        api.handleErrors(promise).then(function (response) {
+            $scope.ViewData.products = response.data;
+        }, function (response) {
+            $scope.$emit('addNotification', response.data);
+        });
+    };
+
+    function editProduct(ProductID) {
+        var data = $scope.ViewData.product;
+        var promise = api.apiRequest('editProduct/' + ProductID, 'POST', data);
+        api.handleErrors(promise).then(function (data) {
+            getProduct(ProductID);
+        }, function (response) {
+            $scope.$emit('addNotification', response.data);
+        });
+        return false;
     };
 
     function toggleListView (view) {
         console.log($scope.ViewData.ListView);
         $scope.ViewData.ListView = view;
         return false;
+    };
+
+    function getTracks(id) {
+        var promise;
+        if (!isNaN(id)) {
+            promise = api.apiRequest('getTracks/' + id, 'GET');
+        }
+        api.handleErrors(promise).then(function (response) {
+            $scope.ViewData.tracks = response.data;
+        }, function (response) {
+            $scope.$emit('addNotification', response.data);
+        });
+    };
+
+    function editTrack(AlbumTrackID, TrackName) {
+        var data = { 'TrackName': TrackName };
+        var promise = api.apiRequest('editTrack/' + AlbumTrackID, 'POST', data);
+        api.handleErrors(promise).then(function (data) {
+            getTracks($scope.ViewData.productID);
+        }, function (response) {
+            $scope.$emit('addNotification', response.data);
+        });
+        return false;
+    };
+
+    function deleteTrack(AlbumTrackID) {
+        var promise = api.apiRequest('deleteTrack/' + AlbumTrackID, 'GET');
+        api.handleErrors(promise).then(function (data) {
+            getTracks($scope.ViewData.productID);
+        }, function (response) {
+            $scope.$emit('addNotification', response.data);
+        });
+        return false;
+    };
+
+    $scope.ViewData.trackUpload = {
+      url: globals.BaseURL() + '/upload',
+      options: {
+        filters: {
+          mime_types : [
+            { title : "Audio files", extensions : "mp3,flac"}
+          ],
+          max_file_size: '128mb'
+        }
+      }
+    };
+
+    $scope.ViewData.coverUpload = {
+      url: globals.BaseURL() + '/upload',
+      options: {
+        filters: {
+          mime_types : [
+            { title : "Image files", extensions : "jpg,jpeg,gif,png"}
+          ],
+          max_file_size: '10mb'
+        }
+      }
     }
 
+    /*
     var uploader = new plupload.Uploader({
         runtimes : 'html5,flash,silverlight,html4',
          
@@ -136,7 +234,7 @@ angular.module('app.artist.controller', [
                 };
             },
             BeforeUpload: function(up, files) {
-                up.settings.multipart_params = { artistID: document.getElementById('artistID').value}
+                up.settings.multipart_params = { albumID: document.getElementById('albumID').value}
             },
             FilesAdded: function(up, files) {
                 plupload.each(files, function(file) {
@@ -164,30 +262,7 @@ angular.module('app.artist.controller', [
             }
         }
     });
-
-    /**
-     * Handles error notifications in case of a subsonic error or an HTTP error. Sets a 'serviceError' flag when
-     * it is neither.
-     * @param  {Promise} promise a Promise that must be resolved or rejected with an object : {'reason': a message that can be displayed to a user, 'httpError': the HTTP error code, 'subsonicError': the error Object sent by Subsonic}
-     * @return {Promise}         the original promise passed as argument. That way we can chain it further !
-     */
-    // TODO: Hyz: Move this to a response interceptor ?
-    $scope.handleErrors = function (promise) {
-        promise.then(null, function (error) {
-            var errorNotif;
-            if (error.subsonicError !== undefined) {
-                errorNotif = error.reason + ' ' + error.subsonicError.message;
-            } else if (error.httpError !== undefined) {
-                errorNotif = error.reason + ' HTTP error ' + error.httpError;
-            } else {
-                error.serviceError = true;
-            }
-            if (error.subsonicError !== undefined || error.httpError !== undefined) {
-                //notifications.updateMessage(errorNotif, true);
-            }
-        });
-       return promise;
-    };
+    */
 
     /* Launch on Startup */
     init();
