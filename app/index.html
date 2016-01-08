@@ -13,7 +13,8 @@
     <link rel="icon" href="" sizes="32x32"/>
     <!-- build:css(.) styles/vendor.min.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap-css-only/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/plyr/dist/plyr.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(app) styles/concat.min.css -->
@@ -22,15 +23,16 @@
   </head>
   <body>
     <div ng-app="app" ng-controller="myCtrl as main">
+      <div ng-include="'shared/player/sprite.svg'" ng-hide="true"></div>
       <div class="container">
-        <div class="alert-fixed" ng-show="notifications.length > 0">
+        <div class="alert-fixed" ng-show="Messages.length > 0">
           <div class="panel panel-default panel-notifications box-shadow--4dp">
             <div class="panel-heading">
-              <h3 class="panel-title">Notifications</h3>
+              <h3 class="panel-title">Messages</h3>
             </div>
             <div class="panel-body">
-                <div class="alert alert-success" role="alert" ng-repeat="o in notifications">
-                  <a class="close" aria-label="close" ng-click="removeNotification(o)">&times;</a>
+                <div class="alert alert-success" role="alert" ng-repeat="o in Messages">
+                  <a class="close" aria-label="close" ng-click="removeMessage(o)">&times;</a>
                   <div id="{{ o.id }}">{{ o.text }}</div>
                 </div>
             </div>
@@ -55,20 +57,24 @@
                 <li><a href="#/about">About</a></li>
                 <li><a href="#/contact">Contact</a></li>
                 <li><a href="#/cart">Cart</a></li>
+                <li><a href="" ng-click="previousTrack()"><span class="glyphicon glyphicon-fast-backward"></span></a></li>
+                <li><a href=""><span class="glyphicon glyphicon-backward"></span></a></li>
+                <li ng-show="ViewData.pauseSong"><a href="" ng-click="togglePause()"><span class="glyphicon glyphicon-play"></span></a></li>
+                <li ng-hide="ViewData.pauseSong"><a href="" ng-click="togglePause()"><span class="glyphicon glyphicon-pause"></span></a></li>
+                <li><a href=""><span class="glyphicon glyphicon-forward"></span></a></li>
+                <li><a href="" ng-click="nextTrack()"><span class="glyphicon glyphicon-fast-forward"></span></a></li>
               </ul>
               <ul class="nav navbar-nav floatright">
-                <li><a href="#/login" ng-hide="isAuthenticated" ng-class="{ active: $route.current.activetab == 'login' }">Login</a></li>
-                <li><a href="#/register" ng-hide="isAuthenticated" ng-class="{ active: $route.current.activetab == 'register' }">Register</a></li>
-                <li><a href="#/account" ng-show="isAuthenticated" ng-class="{ active: $route.current.activetab == 'account' }">{{ currentUser.userName }}</a></li>
+                <li ng-hide="isAuthenticated"><a href="#/login" ng-class="{ active: $route.current.activetab == 'login' }">Login</a></li>
+                <li ng-hide="isAuthenticated"><a href="#/register" ng-class="{ active: $route.current.activetab == 'register' }">Register</a></li>
+                <li ng-show="isAuthenticated"><a href="#/account" ng-class="{ active: $route.current.activetab == 'account' }">{{ currentUser.userName }}</a></li>
                 <li><ngcart-summary></ngcart-summary></li>
               </ul>
             </div><!--/.nav-collapse -->
           </div>
         </nav>
 
-        <div class="header">
-          <h1></h1>
-        </div>
+        <div class="header"><div ng-include="ViewData.directory.player + '/player.html'" ng-show="ViewData.queue.length > 0"></div></div>
 
         <div ng-view></div>
       </div><!-- /.container -->
@@ -82,6 +88,10 @@
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/ng-lodash/build/ng-lodash.js"></script>
+    <script src="bower_components/plyr/dist/plyr.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+
     <!-- endbower -->
     <!-- endbuild -->
     <!-- our scripts -->
@@ -90,12 +100,17 @@
     <script src="components/cart/ngCart.fulfilment.js"></script>
     <script src="components/cart/ngCart.directives.js"></script>
     <script src="components/shop/shop.js"></script>
+    <script src="components/user/user.js"></script>
     <script src="components/artist/artist.js"></script>
+    <script src="shared/player/player-directive.js"></script>
+    <script src="shared/player/player-service.js"></script>
     <script src="shared/plupload/plupload-directive.js"></script>
     <script src="shared/plupload/plupload.full.min.js"></script>
     <script src="shared/auth/auth.js"></script>
     <script src="shared/auth/auth-service.js"></script>
     <script src="shared/api/api-service.js"></script>
+    <script src="shared/common/notification-service.js"></script>
+    <script src="shared/common/model-service.js"></script>
     <script src="shared/common/utils-directive.js"></script>
     <script src="shared/common/utils-service.js"></script>
     <script src="shared/common/globals.js"></script>

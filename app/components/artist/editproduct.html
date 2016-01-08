@@ -25,6 +25,7 @@
 	  	<h1>Tracks</h1>
 		<table class="table">
 		    <tr ng-repeat="o in ViewData.tracks">
+            <td><a href="" ng-click="playSong(o)"><span class="glyphicon glyphicon-play"></span></a></td>
 		    <td ng-bind="o.TrackNumber"></td>
 		    <td class="" inline-edit="o.TrackName" on-save="editTrack(o.TrackName)" on-cancel=""></td>
 		    <td></td>

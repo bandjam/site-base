@@ -337,8 +337,8 @@ module.exports = function (grunt) {
           },
           svg: {
             files: [{
-              src: ['bower_components/open-iconic/sprite/sprite.svg'],
-              dest: '<%= yeoman.app %>/images/sprite/iconic.svg'
+              src: ['bower_components/plyr/dist/sprite.svg'],
+              dest: '<%= yeoman.app %>/images/sprite.svg'
             }]
           },
           www: {

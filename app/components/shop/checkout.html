@@ -1,0 +1,20 @@
+<div class="container">
+	<div class="row col-md-12 bottom10">
+		<h1>Checkout</h1>
+		<uib-accordion close-others="true">
+		    <uib-accordion-group heading="Order Details" is-open="ViewData.accordion.order.open" is-disabled="ViewData.accordion.order.disabled" class="{{ViewData.accordion.order.status}}">
+				<ngcart-cart mode="view"></ngcart-cart>
+				<button class="btn btn-success floatright" role="button" ng-click="checkoutNext('address')">Next</button>
+		    </uib-accordion-group>
+		    <uib-accordion-group heading="Address" is-open="ViewData.accordion.address.open" is-disabled="ViewData.accordion.address.disabled" class="{{ViewData.accordion.address.status}}">
+		    	<div ng-include="ViewData.directory.user + '/address.html'"></div>
+				<button class="btn btn-success floatright" role="button" ng-click="checkoutNext('payment')">Next</button>
+		    </uib-accordion-group>
+		    <uib-accordion-group heading="Payment" is-open="ViewData.accordion.payment.open" is-disabled="ViewData.accordion.payment.disabled" class="{{ViewData.accordion.payment.status}}">
+		    	<ngcart-checkout service="http" settings="{ url:'/checkout' }">Checkout</ngcart-checkout>
+				<ngcart-checkout service="log">Checkout (Test)</ngcart-checkout>
+		    </uib-accordion-group>
+	    </uib-accordion>
+		<hr>
+	</div>
+</div>

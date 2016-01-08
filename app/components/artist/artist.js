@@ -10,7 +10,8 @@ angular.module('app.artist.controller', [
     'app.utils',
     'app.utils.directive',
     'app.plupload.directive',
-    'app.api.service'
+    'app.api.service',
+    'app.model'
 ])
 
 .controller('artistController', [
@@ -24,6 +25,7 @@ angular.module('app.artist.controller', [
     'globals',
     'utils',
     'api',
+    'model',
     function ( 
         $scope,
         $route,
@@ -34,7 +36,8 @@ angular.module('app.artist.controller', [
         _,
         globals,
         utils,
-        api
+        api,
+        model
     ) {
     'use strict';
 
@@ -107,23 +110,20 @@ angular.module('app.artist.controller', [
     function getProduct(ProductID) {
         var promise;
         if (!isNaN(ProductID)) {
-            promise = api.apiRequest('getProduct/' + ProductID, 'GET');
+            promise = api.apiRequest('getUserProducts/' + ProductID, 'GET');
         }
         api.handleErrors(promise).then(function (response) {
             $scope.ViewData.product = response.data[0];
         }, function (response) {
             $scope.ViewData.product = null;
-            $scope.$emit('addNotification', response.data);
         });
     };
 
     function getProducts() {
-        var promise;
-        promise = api.apiRequest('getProducts', 'GET');
+        var promise = api.apiRequest('getUserProducts', 'GET');
         api.handleErrors(promise).then(function (response) {
             $scope.ViewData.products = response.data;
         }, function (response) {
-            $scope.$emit('addNotification', response.data);
         });
     };
 
@@ -133,7 +133,6 @@ angular.module('app.artist.controller', [
         api.handleErrors(promise).then(function (data) {
             getProduct(ProductID);
         }, function (response) {
-            $scope.$emit('addNotification', response.data);
         });
         return false;
     };
@@ -145,15 +144,13 @@ angular.module('app.artist.controller', [
     };
 
     function getTracks(id) {
-        var promise;
+        var promise = api.apiRequest('getTracks/' + id, 'GET')
         if (!isNaN(id)) {
-            promise = api.apiRequest('getTracks/' + id, 'GET');
+            api.handleErrors(promise).then(function (response) {
+                $scope.ViewData.tracks = model.mapResult(response.data, model.Song);
+            }, function (response) {
+            });
         }
-        api.handleErrors(promise).then(function (response) {
-            $scope.ViewData.tracks = response.data;
-        }, function (response) {
-            $scope.$emit('addNotification', response.data);
-        });
     };
 
     function editTrack(AlbumTrackID, TrackName) {
@@ -162,7 +159,6 @@ angular.module('app.artist.controller', [
         api.handleErrors(promise).then(function (data) {
             getTracks($scope.ViewData.productID);
         }, function (response) {
-            $scope.$emit('addNotification', response.data);
         });
         return false;
     };
@@ -172,7 +168,6 @@ angular.module('app.artist.controller', [
         api.handleErrors(promise).then(function (data) {
             getTracks($scope.ViewData.productID);
         }, function (response) {
-            $scope.$emit('addNotification', response.data);
         });
         return false;
     };

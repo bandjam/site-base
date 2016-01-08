@@ -1,7 +1,8 @@
 
 angular.module('app.plupload.directive', [
     'app.common.globals',
-    'app.auth.service'
+    'app.auth.service',
+    'app.notifications'
 ])
 
 .service('uploaders', function () {
@@ -40,8 +41,8 @@ angular.module('app.plupload.directive', [
 })
 
 .directive('plupload', [
-  '$timeout', 'pluploadOption', 'uploaders', 'auth',
-  function ($timeout, pluploadOption, uploaders, auth) {
+  '$timeout', 'pluploadOption', 'uploaders', 'auth', 'notification',
+  function ($timeout, pluploadOption, uploaders, auth, notification) {
     function lowercaseFirstLetter(string) {
       return string.charAt(0).toLowerCase() + string.slice(1);
     }
@@ -91,7 +92,7 @@ angular.module('app.plupload.directive', [
                         id: file.id,
                         text: file.name + ' (' + plupload.formatSize(file.size) + ')'
                     }
-                    scope.$emit('addNotification', msg);
+                    notification.addMessage(msg);
                 });
                 $timeout(function() { 
                     var u = uploaders.instance[scope.index];
@@ -116,7 +117,7 @@ angular.module('app.plupload.directive', [
                         id: file.id,
                         text: file.name + ' (' + plupload.formatSize(file.size) + ') ' + file.percent + '%'
                     }
-                    scope.$emit('editNotification', msg);
+                    notification.editMessage(msg);
                 }
             },
             error: function(up, err) {
@@ -124,7 +125,7 @@ angular.module('app.plupload.directive', [
                     id: err.file.id,
                     text: err.file.name + ' Error: ' + err.message
                 }
-                scope.$emit('editNotification', msg);
+                notification.editMessage(msg);
             }
         };
 

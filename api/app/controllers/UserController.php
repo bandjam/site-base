@@ -8,25 +8,24 @@ class UserController extends Controller{
 	}
 
 	function beforeroute(){
+		return $this->checkToken();
 	}
 
-	function authenticate() {
-
-		$username = $this->f3->get('POST.username');
-		$password = $this->f3->get('POST.password');
-
-		$user = new User($this->db);
-		$user->getByName($username);
-
-		if($user->dry()) {
-			$this->f3->reroute('/login');
-		}
-
-		if(password_verify($password, $user->password)) {
-			$this->f3->set('SESSION.user', $user->username);
-			$this->f3->reroute('/');
-		} else {
-			$this->f3->reroute('/login');
-		}
+	function checkout() {
+		$p = new Product($this->db);
+		$post = json_decode($this->f3->get('BODY'), true);
+		$type = $post['ProductType'];
+		$p->UserID = $post['UserID'];
+		switch ($type) {
+		    case "album":
+				//$album->AlbumName = $this->f3->get('POST.AlbumName');
+				$p->ProductName = $post['AlbumName'];
+				$p->ProductType = "album";
+				$p->ProductPrice = 0;
+				$p->OptionGroupID = 1;
+		    break;
+	    } 
+	    $p->save();
+		echo $this->utils->successResponse($p, null);
 	}
 }

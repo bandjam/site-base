@@ -12,9 +12,11 @@ angular.module('app.common.globals', [])
     cart: componentsDirectory + "cart/",
     shop: componentsDirectory + "shop/",
     artist: componentsDirectory + "artist/",
+    user: componentsDirectory + "user/",
     shared: sharedDirectory,
     auth: sharedDirectory + "auth/",
     common: sharedDirectory + "common/",
+    player: sharedDirectory + "player/",
     dev: "dev/"
   };
 })())

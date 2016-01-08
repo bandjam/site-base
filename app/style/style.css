@@ -19,6 +19,12 @@ span[ng-click] {
 .bottom15 { margin-bottom:15px; }
 .bottom17 { margin-bottom:17px; }
 .bottom30 { margin-bottom:30px; }
+.margin5 { margin:5px; }
+.margin7 { margin:7px; }
+.margin10 { margin:10px; }
+.margin15 { margin:15px; }
+.margin17 { margin:17px; }
+.margin30 { margin:30px; }
 .click { cursor: pointer; }
 .floatright { float: right;}
 .floatleft { float: left; }
@@ -177,4 +183,12 @@ span[ng-click] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+/* Cart Styles */
+.ngCart.cart span[ng-click] {
+    cursor: pointer;
+}
+.ngCart.cart .glyphicon.disabled {
+    color:#aaa;
 }

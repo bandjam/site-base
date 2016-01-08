@@ -53,7 +53,9 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
         return {
             restrict : 'E',
             controller : 'CartController',
-            scope: {},
+            scope: {
+                mode:'@'
+            },
             templateUrl: function(element, attrs) {
                 if ( typeof attrs.templateUrl == 'undefined' ) {
                     return ngCart.path() + 'cart-directive.html';
@@ -92,16 +94,14 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
                 $scope.checkout = function () {
                     fulfilmentProvider.setService($scope.service);
                     fulfilmentProvider.setSettings($scope.settings);
-                    fulfilmentProvider.checkout()
-                        .success(function (data, status, headers, config) {
-                            $rootScope.$broadcast('ngCart:checkout_succeeded', data);
-                        })
-                        .error(function (data, status, headers, config) {
-                            $rootScope.$broadcast('ngCart:checkout_failed', {
-                                statusCode: status,
-                                error: data
-                            });
+                    fulfilmentProvider.checkout().then(function (data, status, headers, config) {
+                        $rootScope.$broadcast('ngCart:checkout_succeeded', data);
+                    }, function (data, status, headers, config) {
+                        $rootScope.$broadcast('ngCart:checkout_failed', {
+                            statusCode: status,
+                            error: data
                         });
+                    });
                 }
             }]),
             scope: {

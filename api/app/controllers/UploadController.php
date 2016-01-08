@@ -42,7 +42,7 @@ class UploadController extends Controller{
 	public function handleUpload($file, $uploadDir, $uploadType, $id) {
 		$fileName = $this->f3->get('POST.name');
 		$fileBaseName = pathinfo($fileName, PATHINFO_FILENAME);
-        $fileType = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $fileType = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 		$slugName = basename($file['name']);
 		$slugBaseName = pathinfo($slugName, PATHINFO_FILENAME);
 		$uploadDirFull = $this->docRoot . $uploadDir;
@@ -63,18 +63,53 @@ class UploadController extends Controller{
 		    case "track":
 		        $track = new AlbumTrack($this->db);
 	            // Extract ID3 tags using getID3 engine
-	        	$fileTypes = array("mp3");
+	        	$fileTypes = array("mp3", "flac");
 				if (in_array($fileType, $fileTypes)) {
 					$getID3 = new getID3;
 	    			// Currently using tmp_name, actual file gets created after handler runs
 					$tags = $getID3->analyze($file['tmp_name']);
-					if (isset($tags['tags']['id3v1'])) {
-						$track->TrackName = $tags['tags']['id3v1']['title'][0];
-						$track->TrackNumber = $tags['tags']['id3v1']['track'][0];
+					if ($this->debug) {
+						$this->utils->debug(__METHOD__, $tags);
 					}
-				} else {
-		    		$track->TrackName = $fileBaseName;
-				}
+					
+					// See https://raw.githubusercontent.com/JamesHeinrich/getID3/master/structure.txt
+					if (isset($tags['playtime_seconds'])) {
+						$track->Length = $tags['playtime_seconds'];
+					}
+					if (isset($tags['audio'])) {
+						$tag = $tags['audio'];
+						$track->Bitrate = $tag['bitrate'];
+						$track->BitrateMode = $tag['bitrate_mode'];
+						$track->Codec = $tag['codec'];
+						$track->Format = $tag['dataformat'];
+						$track->Encoder = $tag['encoder'];
+						$track->Lossless = $tag['lossless'];
+					}
+					if (isset($tags['tags']['id3v1'])) {
+						$tag = $tags['tags']['id3v1'];
+						$track->TrackName = $tag['title'][0];
+						$track->TrackNumber = $tag['track'][0];
+					}
+					if (isset($tags['tags']['id3v2'])) {
+						$tag = $tags['tags']['id3v2'];
+						$track->TrackName = $tag['title'][0];
+						$track->TrackNumber = $tag['track_number'][0];
+						$track->DiscNumber = $tag['part_of_a_set'][0];
+						$track->Date = $tag['year'][0];
+						$track->Genre = $tag['genre'][0];
+					}
+					if (isset($tags['tags']['vorbiscomment'])) {
+						$tag = $tags['tags']['vorbiscomment'];
+						$track->TrackName = $tag['title'][0];
+						$track->TrackNumber = $tag['tracknumber'][0];
+						$track->DiscNumber = $tag['discnumber'][0];
+						$track->Date = $tag['date'][0];
+						$track->Genre = $tag['genre'][0];
+					}
+					if ($track->TrackName == null) {
+			    		$track->TrackName = $fileBaseName;
+					}
+				} 
 
 				$track->ProductID = $id;
 		        $track->FileName = $fileFullPath;
@@ -88,7 +123,7 @@ class UploadController extends Controller{
 		    case "cover":
 		    	// Currently using tmp_name, actual file gets created after handler runs
 		        $product = new Product($this->db);
-		        $product->getById($this->userID, $id);
+		        $product->getByUser($this->userID, $id);
 		        $product->ProductImage = $fileFullPath;
 		        if ($this->debug) {
 					$this->utils->debug(__METHOD__, $product->cast());

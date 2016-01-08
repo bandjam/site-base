@@ -30,7 +30,7 @@ angular.module('ngCart.fulfilment', [])
 
             var deferred = $q.defer();
 
-            $log.info(ngCart.toObject());
+            $log.info(JSON.stringify(ngCart.toObject()));
             deferred.resolve({
                 cart:ngCart.toObject()
             });

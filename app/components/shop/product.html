@@ -1,0 +1,25 @@
+<div class="container">
+	<div class="row col-md-6 col-md-offset-3 bottom10">
+		<h1>{{ViewData.product.ProductName}}</h1>
+		<p>{{ViewData.product.ProductDesc}}</p>
+		<b>{{ViewData.product.ProductPrice}}</b>
+	<hr>
+	</div>
+
+	<div ng-switch on="ViewData.product.ProductType" class="row col-md-6 col-md-offset-3 bottom10">
+	  <div ng-switch-when="album">
+	  	<h1>Tracks</h1>
+		<table class="table">
+		    <tr ng-repeat="o in ViewData.tracks">
+            <td><a href="" ng-click="playSong(o)"><span class="glyphicon glyphicon-play"></span></a></td>
+		    <td ng-bind="o.TrackNumber"></td>
+		    <td class="" ng-bind="o.TrackName"></td>
+		    <td></td>
+		    </tr>
+		</table>
+	  </div>
+	  <div ng-switch-when="editor">
+	  </div>
+	  <div ng-switch-default></div>
+	</div>
+</div>

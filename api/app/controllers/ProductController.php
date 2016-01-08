@@ -46,24 +46,17 @@ class ProductController extends Controller{
 		echo $this->utils->successResponse($product, null);
 	}
 
-	function getProducts() {
+	function getUserProducts() {
 		$ProductID = $this->f3->get('PARAMS.ProductID');
 
 		$p = new Product($this->db);
 		//$products = $product->all();
 		if (isset($ProductID)) {
-			$products = $p->getById($this->userID, $ProductID);
+			$products = $p->getByUser($this->userID, $ProductID);
 		} else {
-			$products = $p->all($this->userID);
+			$products = $p->getByUser($this->userID, null);
 		}
 		echo $this->utils->successResponse($p, $products);
-	}
-
-	function getTracks() {
-		$ProductID = $this->f3->get('PARAMS.ProductID');
-		$album = new AlbumTrack($this->db);
-		$tracks = $album->getByProductId($ProductID);
-		echo $this->utils->successResponse($album, $tracks);
 	}
 
 	function editTrack() {
@@ -87,4 +80,14 @@ class ProductController extends Controller{
 			$album->delete($AlbumTrackID);
 		}
 	}
+
+	function streamTrack() {
+		$AlbumTrackID = $this->f3->get('PARAMS.AlbumTrackID');
+		$track = new AlbumTrack($this->db);
+		$track->getById($AlbumTrackID);
+
+		$filePath = $track->FileName;
+		$this->utils->smartReadFile($filePath);
+	}
+
 }

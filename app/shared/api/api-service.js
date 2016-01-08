@@ -6,7 +6,8 @@
 */
 angular.module('app.api.service', [
     'ngLodash',
-    'app.common.globals'
+    'app.common.globals',
+    'app.notifications'
 ])
 
 .service('api', apiService);
@@ -15,20 +16,21 @@ apiService.$inject = [
     '$http',
     '$q',
     'lodash',
-    'globals'
+    'globals',
+    'notification'
 ];
 
 function apiService(
     $http,
     $q,
     _,
-    globals
+    globals,
+    notification
 ) {
     'use strict';
 
     var self = this;
     _.extend(self, {
-        test: test,
         apiRequest: apiRequest,
         handleErrors: handleErrors
     });
@@ -108,24 +110,10 @@ function apiService(
      */
     // TODO: Hyz: Move this to a response interceptor ?
     function handleErrors(promise) {
-        promise.then(null, function (error) {
-            var errorNotif;
-            if (error.subsonicError !== undefined) {
-                errorNotif = error.reason + ' ' + error.subsonicError.message;
-            } else if (error.httpError !== undefined) {
-                errorNotif = error.reason + ' HTTP error ' + error.httpError;
-            } else {
-                error.serviceError = true;
-            }
-            if (error.subsonicError !== undefined || error.httpError !== undefined) {
-                //notifications.updateMessage(errorNotif, true);
-            }
+        promise.then(null, function (response) {
+            notification.addMessage(response.data);
         });
        return promise;
     };
-
-    function test() {
-        return self.apiRequest('test');
-    }
 
 }

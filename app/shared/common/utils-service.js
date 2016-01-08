@@ -275,4 +275,8 @@ angular.module('app.utils', [
         }
         return null;
     }
+
+    this.countries = [
+        { value: "US", name: "United States"}
+    ]
 }]);

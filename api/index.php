@@ -9,20 +9,28 @@ $f3->config('fatfree/config.ini');
 $f3->set('HEADERS.Origin','*');
 $f3->set('CORS.origin','*');
 $f3->set('CORS.headers', ['Content-Type', 'Authorization']);
-//$f3->set('AUTOLOAD','public/pages/');
 
-//$f3->route('GET /','');
-//$f3->route('GET /','MainController->render');
+// Public
+$f3->route('GET /streamTrack/@AlbumTrackID','PublicController->streamTrack');
+$f3->route('GET /getProducts','PublicController->getProducts');
+$f3->route('GET /getProducts/@ProductID','PublicController->getProducts');
+$f3->route('POST /checkout','PublicController->checkout');
+
+// Private
 $f3->route('POST /upload','UploadController->upload');
 $f3->route('POST /addProduct','ProductController->addProduct');
-$f3->route('GET /getProducts','ProductController->getProducts');
-$f3->route('GET /getProduct/@ProductID','ProductController->getProducts');
+$f3->route('GET /getUserProducts','ProductController->getUserProducts');
+$f3->route('GET /getUserProducts/@ProductID','ProductController->getUserProducts');
 $f3->route('POST /editProduct/@ProductID','ProductController->editProduct');
-
 $f3->route('GET /getAlbums','ProductController->getAlbums');
 $f3->route('GET /getTracks/@ProductID','ProductController->getTracks');
 $f3->route('POST /editTrack/@AlbumTrackID','ProductController->editTrack');
 $f3->route('GET /deleteTrack/@AlbumTrackID','ProductController->deleteTrack');
+//$f3->route('GET /streamTrack/@AlbumTrackID','ProductController->streamTrack');
+
+// Testing Only
+$f3->route('GET /getTrackMetadata/@AlbumTrackID','PublicController->getTrackMetadata');
+
 
 // Auth
 $f3->route('POST /login','AuthController->login');

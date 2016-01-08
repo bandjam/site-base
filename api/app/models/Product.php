@@ -6,13 +6,22 @@ class Product extends DB\SQL\Mapper{
 	    parent::__construct($db,'products');
 	}
 	
-	public function all($UserID) {
-	    $this->load(array('UserID=?',$UserID));
+	public function all() {
+	    $this->load();
 	    return $this->query;
 	}
 
-	public function getById($UserID, $id) {
-	    $this->load(array('UserID=? AND ProductID=?', $UserID, $id));
+	public function getByUser($UserID, $id) {
+		if (isset($id)) {
+	    	$this->load(array('UserID=? AND ProductID=?', $UserID, $id));
+		} else {
+	    	$this->load(array('UserID=?',$UserID));
+	    }
+	    return $this->query;
+	}
+
+	public function getById($id) {
+	    $this->load(array('ProductID=?', $id));
 	    return $this->query;
 	}
 

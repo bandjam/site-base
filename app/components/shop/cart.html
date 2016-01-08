@@ -1,0 +1,12 @@
+<div class="container">
+	<div class="row col-md-12 bottom10">
+		<h1>Cart</h1>
+		<ngcart-cart mode="edit"></ngcart-cart>
+	</div>
+	<div class="row col-md-3 col-md-offset-9 bottom10" ng-show="isAuthenticated">
+    	<button class="btn btn-primary" role="button" ng-click="go('/checkout')">Checkout</button>
+	</div>
+	<div class="row col-md-8 col-md-offset-4 bottom10" ng-hide="isAuthenticated">
+		Please <button class="btn btn-primary" role="button" ng-click="go('/login')">Login</button> or <button class="btn btn-primary" role="button" ng-click="go('/register')">Register</button>
+	</div>
+</div>
