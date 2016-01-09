@@ -1,0 +1,21 @@
+<div class="container">
+	<div class="row">
+		<table class="table">
+		    <tr ng-repeat="o in ViewData.queue">
+		    <td ng-bind="o.TrackNumber"></td>
+		    <td class="" inline-edit="o.TrackName" on-save="editTrack(o.TrackName)" on-cancel=""></td>
+		    <td></td>
+		    <td><a href="" class="btn btn-default btn-sm" ng-click="deleteTrack(o.AlbumTrackID)"><span class="glyphicon glyphicon-trash"></span></a></td>
+		    </tr>
+		</table>
+	</div>
+	<section class="panel example-audio" id="audio">
+		<h4>{{ViewData.activePlayer}}</h4>
+		<div class="player" id="player0" preload="auto" plyr player-src="" ng-hide="ViewData.activePlayer == 1">
+		  <audio controls><source src="" type=""></audio>
+		</div>
+		<div class="player" id="player1" preload="auto" plyr player-src="" ng-hide="ViewData.activePlayer == 0">
+		  <audio controls><source src="" type=""></audio>
+		</div>
+	</section>
+</div>

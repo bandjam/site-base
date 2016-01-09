@@ -1,0 +1,29 @@
+<div ng-if="currentUser">Welcome, {{ currentUser.userName }}</div>
+<div ng-if="isAuthorized(userRoles.admin)">You're admin.</div>
+<div ng-switch on="currentUser.userRole">
+  <div ng-switch-when="admin">You're admin.</div>
+  <div ng-switch-when="editor">You're editor.</div>
+  <div ng-switch-default>You're something else.</div>
+  <pre><b>Current User:</b> {{currentUser}}</pre>
+</div>
+
+<div class="container">
+
+  <form class="form-signin" method="POST">
+    <div class="form-group">
+    <h2 class="form-signin-heading">Please sign in</h2>
+    </div>
+    <div class="form-group">
+        <input type="text" name="inputUsername" class="form-control" ng-model="FormData.UserName"
+               placeholder="Username" validate-on="blur" required required-message="'Username is required'">
+    </div>
+    <div class="form-group">
+        <input type="password" name="inputPassword" class="form-control" ng-model="FormData.UserPassword" placeholder="Password"
+                validate-on="blur" required required-message="'Password is required'">
+    </div>
+    <div class="form-group">
+    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login()">Sign in</button>
+    </div>
+  </form>
+
+</div> <!-- /container -->

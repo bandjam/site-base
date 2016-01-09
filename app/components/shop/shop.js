@@ -7,7 +7,9 @@
 angular.module('app.shop.controller', [
     'ngLodash',
     'app.api.service',
-    'app.model'
+    'app.model',
+    'vr.StripeJS.service',
+    'vr.StripeJS.directive'
 ])
 
 .controller('shopController', [
@@ -21,7 +23,8 @@ angular.module('app.shop.controller', [
     'utils',
     'api',
     'model',
-    'ngCart', 
+    'ngCart',
+    'StripeJS',
     function ( 
         $scope,
         $route,
@@ -33,7 +36,8 @@ angular.module('app.shop.controller', [
         utils,
         api,
         model,
-        ngCart
+        ngCart,
+        StripeJS
     ) {
     'use strict';
 
@@ -46,6 +50,12 @@ angular.module('app.shop.controller', [
                 State: "PA",
                 Zipcode: "16823",
                 Country: utils.countries[0]
+            },
+            Payment: {
+                CardNumber: "4242424242424242",
+                CVC: "333",
+                Month: "05",
+                Year: "17"
             }
         },
         ViewData: { 
@@ -56,15 +66,16 @@ angular.module('app.shop.controller', [
             ListView: "grid" ,
             accordion: {
                 order: { open: true, disabled: false, status: '', data: null },
-                address: { open: false, disabled: true, status: '', data: null },
-                payment: { open: false, disabled: true, status: '', data: null },
+                address: { open: true, disabled: false, status: '', data: null },
+                payment: { open: true, disabled: false, status: '', data: null },
                 current: 'order'
             },
             countries: utils.countries
         },
         go: go,
         getProducts: getProducts,
-        checkoutNext: checkoutNext
+        checkoutNext: checkoutNext,
+        submitPaymentForm: submitPaymentForm
     });
 
     function init () {
@@ -124,10 +135,6 @@ angular.module('app.shop.controller', [
                 $scope.ViewData.accordion[current].data = $scope.FormData.Address;
                 console.log(JSON.stringify($scope.ViewData.accordion[current].data));
                 break;
-            case 'payment':
-                //$scope.ViewData.accordion[current].data = ngCart.toObject();
-                //console.log(JSON.stringify($scope.ViewData.accordion[current].data));
-                break;
         }
         // Close current group
         $scope.ViewData.accordion[current].open = false;
@@ -137,6 +144,33 @@ angular.module('app.shop.controller', [
         $scope.ViewData.accordion[group].disabled = false;
         $scope.ViewData.accordion.current = group;
     };
+
+    function stripeResponseHandler(status, response) {
+        if (response.error) {
+            // Show the errors on the form
+            console.log(response.error.message);
+            //$form.find('button').prop('disabled', false);
+        } else {
+            // response contains id and card, which contains additional card details
+            var token = response;
+            $scope.ViewData.accordion.payment.data = token;
+            console.log($scope.ViewData.accordion.payment.data);
+
+            // Submit Form
+        }
+    };
+
+    function submitPaymentForm() {
+        var form = {
+            number: $scope.FormData.Payment.CardNumber,
+            cvc: $scope.FormData.Payment.CVC,
+            exp_month: $scope.FormData.Payment.Month,
+            exp_year: $scope.FormData.Payment.Year
+        };
+        StripeJS.createToken(form, stripeResponseHandler);
+        // Prevent the form from submitting with the default action
+        return false;
+    }
 
     /* Launch on Startup */
     init();

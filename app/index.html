@@ -13,15 +13,15 @@
     <link rel="icon" href="" sizes="32x32"/>
     <!-- build:css(.) styles/vendor.min.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/plyr/dist/plyr.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(app) styles/concat.min.css -->
     <link rel="stylesheet" href="style/style.css"/>
     <!-- endbuild -->
   </head>
-  <body>
+  <body> 
     <div ng-app="app" ng-controller="myCtrl as main">
       <div ng-include="'shared/player/sprite.svg'" ng-hide="true"></div>
       <div class="container">
@@ -52,23 +52,23 @@
             <div id="navbar" class="collapse navbar-collapse">
               <ul class="nav navbar-nav">
                 <li class=""><a href="#">Home</a></li>
-                <li><a href="#/shop">Shop</a></li>
-                <li><a href="#/artist" ng-class="{ active: $route.current.activetab == 'artist' }">Artist</a></li>
-                <li><a href="#/about">About</a></li>
-                <li><a href="#/contact">Contact</a></li>
-                <li><a href="#/cart">Cart</a></li>
+                <li><a href="#/shop" ng-class="{ active: $route.current.activetab == 'shop' }">Shop</a></li>
+                <li><a href="#/artist" ng-class="{ active: $route.current.activetab == 'artist' }" ng-show="isAuthorized(userRoles.admin)">Artist</a></li>
+              </ul>
+              <ul class="nav navbar-nav floatright">
+                <li ng-hide="isAuthenticated"><a href="#/login" ng-class="{ active: $route.current.activetab == 'login' }">Login</a></li>
+                <li ng-hide="isAuthenticated"><a href="#/register" ng-class="{ active: $route.current.activetab == 'register' }">Register</a></li>
+                <li ng-show="isAuthenticated"><a href="#/account" ng-class="{ active: $route.current.activetab == 'account' }">{{ currentUser.userName }}</a></li>
+                <li ng-show="isAuthenticated"><a href="" ng-click="logout()">Logout</a></li>
+                <li><ngcart-summary></ngcart-summary></li>
+              </ul>
+              <ul class="nav navbar-nav floatright">
                 <li><a href="" ng-click="previousTrack()"><span class="glyphicon glyphicon-fast-backward"></span></a></li>
                 <li><a href=""><span class="glyphicon glyphicon-backward"></span></a></li>
                 <li ng-show="ViewData.pauseSong"><a href="" ng-click="togglePause()"><span class="glyphicon glyphicon-play"></span></a></li>
                 <li ng-hide="ViewData.pauseSong"><a href="" ng-click="togglePause()"><span class="glyphicon glyphicon-pause"></span></a></li>
                 <li><a href=""><span class="glyphicon glyphicon-forward"></span></a></li>
                 <li><a href="" ng-click="nextTrack()"><span class="glyphicon glyphicon-fast-forward"></span></a></li>
-              </ul>
-              <ul class="nav navbar-nav floatright">
-                <li ng-hide="isAuthenticated"><a href="#/login" ng-class="{ active: $route.current.activetab == 'login' }">Login</a></li>
-                <li ng-hide="isAuthenticated"><a href="#/register" ng-class="{ active: $route.current.activetab == 'register' }">Register</a></li>
-                <li ng-show="isAuthenticated"><a href="#/account" ng-class="{ active: $route.current.activetab == 'account' }">{{ currentUser.userName }}</a></li>
-                <li><ngcart-summary></ngcart-summary></li>
               </ul>
             </div><!--/.nav-collapse -->
           </div>
@@ -85,13 +85,15 @@
 
     <!-- build:js({.,app}) scripts/vendor.min.js -->
     <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/ng-lodash/build/ng-lodash.js"></script>
-    <script src="bower_components/plyr/dist/plyr.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-
+    <script src="bower_components/ng-lodash/build/ng-lodash.js"></script>
+    <script src="bower_components/plyr/dist/plyr.js"></script>
+    <script src="bower_components/plyr/src/js/plyr.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <!-- our scripts -->
@@ -106,6 +108,9 @@
     <script src="shared/player/player-service.js"></script>
     <script src="shared/plupload/plupload-directive.js"></script>
     <script src="shared/plupload/plupload.full.min.js"></script>
+    <script src="shared/stripe-js/stripe-directive.js"></script>
+    <script src="shared/stripe-js/stripe-filter.js"></script>
+    <script src="shared/stripe-js/stripe-service.js"></script>
     <script src="shared/auth/auth.js"></script>
     <script src="shared/auth/auth-service.js"></script>
     <script src="shared/api/api-service.js"></script>
@@ -116,6 +121,9 @@
     <script src="shared/common/globals.js"></script>
     <script src="app.js"></script>
     <!-- endbuild -->
+
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
 
   </body>
 </html>

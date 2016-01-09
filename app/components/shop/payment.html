@@ -1,0 +1,31 @@
+<form name="paymentForm" novalidate>
+	<div class="form-group" ng-class="{ 'has-error' : paymentForm.CardNumber.$invalid && !paymentForm.CardNumber.$pristine }">
+        <label class="form-label">Credit Cart</label>
+		<input type="text" ng-model="FormData.Payment.CardNumber" id="CardNumber" name="CardNumber" class="form-control" placeholder="0000-0000-0000-0000" validate-card-number required/>
+		<div class="help-block error" ng-show="paymentForm.CardNumber.$invalid && !paymentForm.CardNumber.$pristine">
+		  <span>Invalid Card Number</span>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{ 'has-error' : paymentForm.CVC.$invalid && !paymentForm.CVC.$pristine }">
+        <label class="form-label">CVC Number</label>
+		<input type="text" ng-model="FormData.Payment.CVC" id="CVC" name="CVC" class="form-control" placeholder="000" validate-cvc required/>
+		<div class="help-block error" ng-show="paymentForm.CVC.$invalid && !paymentForm.CVC.$pristine">
+		  <span>Invalid CVC Number</span>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{ 'has-error' : paymentForm.Month.$invalid && !paymentForm.Month.$pristine }">
+        <label class="form-label">Expiration Month</label>
+		<input type="text" ng-model="FormData.Payment.Month" id="Month" name="Month" class="form-control" placeholder="MM" validate-exp-month required/>
+		<div class="help-block error" ng-show="paymentForm.Month.$invalid && !paymentForm.Month.$pristine">
+		  <span>Invalid Expiration Month</span>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{ 'has-error' : paymentForm.Year.$invalid && !paymentForm.Year.$pristine }">
+        <label class="form-label">Expiration Year</label>
+		<input type="text" ng-model="FormData.Payment.Year" id="Year" name="Year" class="form-control" placeholder="YY" validate-exp-year required/>
+		<div class="help-block error" ng-show="paymentForm.Year.$invalid && !paymentForm.Year.$pristine">
+		  <span>Invalid Expiration Year</span>
+		</div>
+	</div>
+	<button class="btn btn-success floatright" role="button" ng-disabled="paymentForm.$invalid" ng-click="submitPaymentForm()">Checkout</button>
+</form>

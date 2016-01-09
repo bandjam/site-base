@@ -33,10 +33,15 @@ angular.module('app.common.globals', [])
 })
 
 .constant('USER_ROLES', {
-  all: '*',
+  all: 'all',
   admin: 'admin',
   editor: 'editor',
   guest: 'guest'
+})
+
+.constant('STRIPE', {
+  testKey: 'pk_test_lGptEld9JswQfqosXF8xImtS',
+  liveKey: '',
 })
 
 .service('globals', function () {
@@ -92,7 +97,7 @@ angular.module('app.common.globals', [])
         //AutoPlay: false,
         //LoopQueue: false,
         //Repeat: false,
-        //Debug: false,
+        Debug: true,
         //ShowQueue: false
     };
     //this.SavedCollections = [];

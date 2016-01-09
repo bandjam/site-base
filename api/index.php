@@ -14,6 +14,7 @@ $f3->set('CORS.headers', ['Content-Type', 'Authorization']);
 $f3->route('GET /streamTrack/@AlbumTrackID','PublicController->streamTrack');
 $f3->route('GET /getProducts','PublicController->getProducts');
 $f3->route('GET /getProducts/@ProductID','PublicController->getProducts');
+$f3->route('GET /getTracks/@ProductID','PublicController->getTracks');
 $f3->route('POST /checkout','PublicController->checkout');
 
 // Private
@@ -23,7 +24,6 @@ $f3->route('GET /getUserProducts','ProductController->getUserProducts');
 $f3->route('GET /getUserProducts/@ProductID','ProductController->getUserProducts');
 $f3->route('POST /editProduct/@ProductID','ProductController->editProduct');
 $f3->route('GET /getAlbums','ProductController->getAlbums');
-$f3->route('GET /getTracks/@ProductID','ProductController->getTracks');
 $f3->route('POST /editTrack/@AlbumTrackID','ProductController->editTrack');
 $f3->route('GET /deleteTrack/@AlbumTrackID','ProductController->deleteTrack');
 //$f3->route('GET /streamTrack/@AlbumTrackID','ProductController->streamTrack');

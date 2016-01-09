@@ -11,9 +11,11 @@
 				<button class="btn btn-success floatright" role="button" ng-click="checkoutNext('payment')">Next</button>
 		    </uib-accordion-group>
 		    <uib-accordion-group heading="Payment" is-open="ViewData.accordion.payment.open" is-disabled="ViewData.accordion.payment.disabled" class="{{ViewData.accordion.payment.status}}">
-		    	<div ng-include="ViewData.directory.shop + '/payment.html'"></div>
+		    	<ngcart-checkout service="http" settings="{ url:'/checkout' }">Checkout</ngcart-checkout>
+				<ngcart-checkout service="log">Checkout (Test)</ngcart-checkout>
 		    </uib-accordion-group>
 	    </uib-accordion>
 		<hr>
 	</div>
 </div>
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>

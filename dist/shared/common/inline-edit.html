@@ -1,0 +1,8 @@
+<div class="inline-edit">
+<form role="form" class="form-inline" name="albumForm" ng-show="editMode">
+	<input type="text" class="form-control" on-enter="save()" on-esc="cancel()" ng-model="model" >
+	<a class="btn btn-default" ng-click="cancel()">Cancel</a>
+	<a class="btn btn-primary" ng-click="save()">Save</a>
+</form>
+<span class="click" ng-hide="editMode" ng-click="edit()">{{model}}</span>
+</div>

@@ -18,6 +18,7 @@ angular.module('app.auth.controller', [
     '$location',
     '$window',
     'lodash',
+    'globals',
     'utils',
     'api',
     'auth',
@@ -31,6 +32,7 @@ angular.module('app.auth.controller', [
         $location,
         $window,
         _,
+        globals,
         utils,
         api,
         auth,
@@ -75,9 +77,19 @@ angular.module('app.auth.controller', [
         var username = $scope.FormData.UserName;
         var password = $scope.FormData.UserPassword;
         auth.login(username, password).then(function (res) {
-            session.create(res.data.userID, res.data.userName, res.data.userRole);
+            var User = { 
+                userID: res.data.userID,
+                userName: res.data.userName,
+                userRole: res.data.userRole
+            };
+            if (globals.settings.Debug) {
+                console.log('LOGIN: ' + JSON.stringify(User));
+            }
+            session.create(User);
+            $rootScope.setCurrentUser(User);
+            $rootScope.isAuthenticated = true;
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-            $scope.setCurrentUser(res.data.user);
+            $location.path('/account').replace();
         }, function () {
           $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
         });
@@ -86,7 +98,7 @@ angular.module('app.auth.controller', [
         auth.register($scope.FormData.Register).then(function (res) {
             session.create(res.data.userID, res.data.userName, res.data.userRole);
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-            $scope.setCurrentUser(res.data.user);
+            $rootScope.setCurrentUser(res.data.user);
         }, function () {
           $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
         });

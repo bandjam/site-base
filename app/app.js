@@ -1,8 +1,9 @@
 'use strict';
 
 var app = angular.module('app', [
+    'ui.router',
     'ngRoute',
-    'ngCart',
+    'ngCart', 
     'app.shop.controller',
     'app.artist.controller',
     'app.auth.controller',
@@ -17,12 +18,18 @@ var app = angular.module('app', [
 
 .config(['$routeProvider', 'directory', 'USER_ROLES', function ($routeProvider, directory, USER_ROLES) {
     $routeProvider
+        .when('/index', { 
+            redirectTo: '/shop',
+            data: {
+              authorizedRoles: [USER_ROLES.all]
+            }
+        })
         .when('/login', { 
             templateUrl: directory.auth + 'login.html', 
             activetab: 'login',
             controller: 'authController',
             data: {
-              authorizedRoles: []
+              authorizedRoles: [USER_ROLES.all]
             }
         })
         .when('/register', { 
@@ -30,7 +37,7 @@ var app = angular.module('app', [
             activetab: 'register',
             controller: 'authController',
             data: {
-              authorizedRoles: []
+              authorizedRoles: [USER_ROLES.all]
             }
         })
         .when('/secure', { 
@@ -40,19 +47,12 @@ var app = angular.module('app', [
               authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
             }
         })
-        .when('/apitest', { 
-            templateUrl: directory.dev + 'apitest.html', 
-            controller: 'apiController',
-            data: {
-              authorizedRoles: []
-            }
-        })
         .when('/uploadtracks/:albumID', { 
             name: 'uploadtracks', 
             templateUrl: directory.artist + 'upload.html', 
             controller: 'artistController',
             data: {
-              authorizedRoles: []
+              authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
             }
         })
         .when('/artist', { 
@@ -61,7 +61,7 @@ var app = angular.module('app', [
             templateUrl: directory.artist + 'artist.html', 
             controller: 'artistController',
             data: {
-              authorizedRoles: []
+              authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
             }
         })
         .when('/editproduct/:productID', { 
@@ -70,7 +70,7 @@ var app = angular.module('app', [
             templateUrl: directory.artist + 'editproduct.html', 
             controller: 'artistController',
             data: {
-              authorizedRoles: []
+              authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
             }
         })
         .when('/account', { 
@@ -79,7 +79,7 @@ var app = angular.module('app', [
             templateUrl: directory.user + 'account.html', 
             controller: 'userController',
             data: {
-              authorizedRoles: []
+              authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor, USER_ROLES.guest]
             }
         })
         .when('/account/info', { 
@@ -88,7 +88,7 @@ var app = angular.module('app', [
             templateUrl: directory.user + 'info.html', 
             controller: 'userController',
             data: {
-              authorizedRoles: []
+              authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor, USER_ROLES.guest]
             }
         })
         .when('/shop', { 
@@ -97,7 +97,7 @@ var app = angular.module('app', [
             templateUrl: directory.shop + 'shop.html', 
             controller: 'shopController',
             data: {
-              authorizedRoles: []
+              authorizedRoles: [USER_ROLES.all]
             }
         })
         .when('/product/:productID', { 
@@ -106,23 +106,31 @@ var app = angular.module('app', [
             templateUrl: directory.shop + 'product.html', 
             controller: 'shopController',
             data: {
-              authorizedRoles: []
+              authorizedRoles: [USER_ROLES.all]
             }
         })
         .when('/cart', { 
             templateUrl: directory.shop + 'cart.html', 
+            activetab: 'shop',
             controller: 'shopController',
             data: {
-              authorizedRoles: []
+              authorizedRoles: [USER_ROLES.all]
             }
         })
         .when('/checkout', { 
             templateUrl: directory.shop + 'checkout.html', 
+            activetab: 'shop',
             controller: 'shopController',
             data: {
-              authorizedRoles: []
+              authorizedRoles: [USER_ROLES.guest]
             }
         })
+        .otherwise({ 
+            redirectTo: '/index',
+            data: {
+              authorizedRoles: [USER_ROLES.all]
+            }
+        });
 }])
 
 .config(function ($httpProvider) {
@@ -134,22 +142,65 @@ var app = angular.module('app', [
   ]);
 })
 
-/* Needs fixed for angularjs 1.4
-.run(function ($rootScope, AUTH_EVENTS, auth) {
+.run(function ($rootScope, $location, AUTH_EVENTS, USER_ROLES, auth) {
   $rootScope.$on('$routeChangeStart', function (event, next) {
+    var postLogInRoute;
     var authorizedRoles = next.data.authorizedRoles;
-    if (!auth.isAuthorized(authorizedRoles)) {
-      event.preventDefault();
-      if (auth.isAuthenticated()) {
-        // user is not allowed
-        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
-      } else {
-        // user is not logged in
-        $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-      }
+    // Allow "all" routes to continue 
+    if (authorizedRoles.indexOf(USER_ROLES.all) == -1) {
+        // Redirect to /login on failure
+        if (!auth.isAuthorized(authorizedRoles)) {
+          event.preventDefault();
+          if (auth.isAuthenticated()) {
+            // user is not allowed
+            $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+          } else {
+            // user is not logged in
+            $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+          }
+          postLogInRoute = $location.path();
+          console.log('AUTH: Redirect to /login');
+          $location.path('/login').replace();
+        } else {
+            // Redirect to previous route if set
+            if (postLogInRoute) {
+                console.log('AUTH: Redirect to ' + postLogInRoute);
+                $location.path(postLogInRoute).replace();
+                postLogInRoute = null;
+            }
+        }
     }
   });
+})
+
+/* Implement for authenticated redirects to site
+$stateProvider.state('protected-route', {
+  url: '/protected',
+  resolve: {
+    auth: function resolveAuthentication(AuthResolver) { 
+      return AuthResolver.resolve();
+    }
+  }
 });
+.factory('AuthResolver', function ($q, $rootScope, $state) {
+  return {
+    resolve: function () {
+      var deferred = $q.defer();
+      var unwatch = $rootScope.$watch('currentUser', function (currentUser) {
+        if (angular.isDefined(currentUser)) {
+          if (currentUser) {
+            deferred.resolve(currentUser);
+          } else {
+            deferred.reject();
+            $state.go('user-login');
+          }
+          unwatch();
+        }
+      });
+      return deferred.promise;
+    }
+  };
+})
 */
 
 app.controller ('myCtrl', [
@@ -157,9 +208,11 @@ app.controller ('myCtrl', [
     '$scope', 
     '$http', 
     '$route', 
+    '$location',
     'ngCart', 
     'USER_ROLES', 
     'utils', 
+    'globals',
     'directory',
     'notification',
     'auth', 
@@ -170,9 +223,11 @@ app.controller ('myCtrl', [
     $scope, 
     $http, 
     $route, 
+    $location,
     ngCart, 
     USER_ROLES, 
     utils, 
+    globals,
     directory,
     notification,
     auth, 
@@ -189,7 +244,27 @@ app.controller ('myCtrl', [
     $scope.currentUser = null;
     $scope.userRoles = USER_ROLES;
     $scope.isAuthorized = auth.isAuthorized;
-    $scope.isAuthenticated = false;
+    $rootScope.isAuthenticated = false;
+    $rootScope.setCurrentUser = function (user) {
+        $scope.currentUser = user;
+    }
+    $scope.logout = function() {
+        auth.logout();
+        session.destroy();
+        $rootScope.setCurrentUser(null);
+        $rootScope.isAuthenticated = false;
+        $location.path('/index');
+    }
+    // Initialize session from stored token
+    if (auth.getToken()) { 
+        var User = auth.getTokenData();
+        if (globals.settings.Debug) {
+            console.log('Restore Session: ' + JSON.stringify(User));
+        }
+        session.create(User);
+        $rootScope.setCurrentUser(User);
+        $rootScope.isAuthenticated = true;
+    }
 
     $rootScope.ViewData =  {
         activePlayer: 0,
@@ -201,17 +276,6 @@ app.controller ('myCtrl', [
     function go(url) {
         utils.go(url);
     };
-
-    $scope.setCurrentUser = function (user) {
-        $scope.currentUser = user;
-    }
-    if (auth.isAuthenticated()) { 
-        // Initialize session from stored token
-        var User = auth.getTokenData();
-        session.create(User);
-        $scope.setCurrentUser(User);
-        $scope.isAuthenticated = true;
-    }
 
     // Messages
     $rootScope.Messages = [];

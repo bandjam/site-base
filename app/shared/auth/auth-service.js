@@ -30,8 +30,12 @@ function authService($q, $window, $injector, globals, session) {
 
     self.getToken = function() {
         var jwt = $window.localStorage['jwtToken'];
-        jwt = JSON.parse(jwt);
-        return jwt.token;
+        if (typeof jwt != 'undefined') {
+            jwt = JSON.parse(jwt);
+            return jwt.token;
+        } else {
+            return false
+        }
     }
 
     self.getTokenData = function() {
@@ -41,7 +45,15 @@ function authService($q, $window, $injector, globals, session) {
     }
 
     self.isAuthenticated = function() {
-        //return !!Session.userId;
+        if (typeof session.userID != 'undefined') {
+            if (globals.settings.Debug) {
+                console.log('Session userID: ' + session.userID);
+            }
+            return true;
+        } else {
+            return false;
+        }
+        /*
         var token = self.getToken();
         if (token) {
             var params = self.parseJwt(token);
@@ -49,6 +61,7 @@ function authService($q, $window, $injector, globals, session) {
         } else {
             return false;
         }
+        */
     }
 
     self.isAuthorized = function(authorizedRoles) {
@@ -56,7 +69,10 @@ function authService($q, $window, $injector, globals, session) {
         if (!angular.isArray(authorizedRoles)) {
           authorizedRoles = [authorizedRoles];
         }
-        return (isAuthenticated && authorizedRoles.indexOf(Session.userRole) !== -1);
+        if (globals.settings.Debug) {
+            console.log('User Roles: ' + session.userRole + ' IN ' + JSON.stringify(authorizedRoles));
+        }
+        return (isAuthenticated && authorizedRoles.indexOf(session.userRole) !== -1);
     }
 
     self.logout = function() {

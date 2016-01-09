@@ -1,8 +1,8 @@
 <h1>Shop</h1>
 
 <div class="row">
-    <div ng-repeat="o in products" class="col-xs-6 col-sm-3">
-        <h4>{{ o.ProductName }}</h4>
+    <div ng-repeat="o in ViewData.products" class="col-xs-6 col-sm-3">
+        <a href="" ng-click="go('/product/' + o.ProductID)">{{ o.ProductName }}</a>
         <p> {{ o.ProductPrice }}</p>
         <ngcart-addtocart id="{{ o.ProductID }}" name="{{ o.ProductName }}" price="{{ o.ProductPrice }}" quantity="1" quantity-max="5">Add to Cart</ngcart-addtocart> 
     </div>
