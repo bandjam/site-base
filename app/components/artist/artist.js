@@ -16,8 +16,8 @@ angular.module('app.artist.controller', [
 
 .controller('artistController', [
     '$scope',
-    '$route',
-    '$routeParams',
+    '$state',
+    '$stateParams',
     '$location',
     '$window',
     '$timeout',
@@ -28,8 +28,8 @@ angular.module('app.artist.controller', [
     'model',
     function ( 
         $scope,
-        $route,
-        $routeParams,
+        $state,
+        $stateParams,
         $location,
         $window,
         $timeout,
@@ -69,17 +69,17 @@ angular.module('app.artist.controller', [
     });
 
     function init () {
-        if ($routeParams.productID) {
-            $scope.ViewData.productID = $routeParams.productID;
+        if ($stateParams.productID) {
+            $scope.ViewData.productID = $stateParams.productID;
         }
-        if ($route.current.$$route.name == 'artist') {
+        if ($state.current.name == 'artist') {
             getProducts();
         }
-        if ($route.current.$$route.name == 'editproduct') {
-            getProduct($routeParams.productID);
-            getTracks($routeParams.productID);
+        if ($state.current.name == 'editproduct') {
+            getProduct($stateParams.productID);
+            getTracks($stateParams.productID);
         }
-        if ($route.current.$$route.name == 'uploadtracks') {
+        if ($state.current.name == 'uploadtracks') {
             //uploader.init();
         }
     };

@@ -15,8 +15,8 @@ angular.module('app.user.controller', [
 .controller('userController', [
     '$rootScope',
     '$scope',
-    '$route',
-    '$routeParams',
+    '$state',
+    '$stateParams',
     '$location',
     '$window',
     '$timeout',
@@ -28,8 +28,8 @@ angular.module('app.user.controller', [
     function ( 
         $rootScope,
         $scope,
-        $route,
-        $routeParams,
+        $state,
+        $stateParams,
         $location,
         $window,
         $timeout,

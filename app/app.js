@@ -16,15 +16,17 @@ var app = angular.module('app', [
     'ui.bootstrap'
 ])
 
-.config(['$routeProvider', 'directory', 'USER_ROLES', function ($routeProvider, directory, USER_ROLES) {
-    $routeProvider
-        .when('/index', { 
+.config(['$stateProvider', 'directory', 'USER_ROLES', function ($stateProvider, directory, USER_ROLES) {
+    $stateProvider
+        .state('index', { 
+            url: '/index',
             redirectTo: '/shop',
             data: {
               authorizedRoles: [USER_ROLES.all]
             }
         })
-        .when('/login', { 
+        .state('login', { 
+            url: '/login',
             templateUrl: directory.auth + 'login.html', 
             activetab: 'login',
             controller: 'authController',
@@ -32,7 +34,8 @@ var app = angular.module('app', [
               authorizedRoles: [USER_ROLES.all]
             }
         })
-        .when('/register', { 
+        .state('register', { 
+            url: '/register',
             templateUrl: directory.auth + 'register.html', 
             activetab: 'register',
             controller: 'authController',
@@ -40,23 +43,16 @@ var app = angular.module('app', [
               authorizedRoles: [USER_ROLES.all]
             }
         })
-        .when('/secure', { 
-            templateUrl: directory.shared + 'login.html', 
-            controller: 'artistController',
-            data: {
-              authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
-            }
-        })
-        .when('/uploadtracks/:albumID', { 
-            name: 'uploadtracks', 
+        .state('uploadtracks', { 
+            url: '/uploadtracks/:albumID',
             templateUrl: directory.artist + 'upload.html', 
             controller: 'artistController',
             data: {
               authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
             }
         })
-        .when('/artist', { 
-            name: 'artist', 
+        .state('artist', { 
+            url: '/artist',
             activetab: 'artist',
             templateUrl: directory.artist + 'artist.html', 
             controller: 'artistController',
@@ -64,8 +60,8 @@ var app = angular.module('app', [
               authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
             }
         })
-        .when('/editproduct/:productID', { 
-            name: 'editproduct', 
+        .state('editproduct', { 
+            url: '/editproduct/:productID',
             activetab: 'artist',
             templateUrl: directory.artist + 'editproduct.html', 
             controller: 'artistController',
@@ -73,26 +69,26 @@ var app = angular.module('app', [
               authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
             }
         })
-        .when('/account', { 
-            name: 'account', 
+        .state('account', { 
+            url: '/account',
             activetab: 'account',
-            templateUrl: directory.user + 'account.html', 
+            templateUrl: directory.user + 'account.html',
             controller: 'userController',
             data: {
               authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor, USER_ROLES.guest]
             }
         })
-        .when('/account/info', { 
-            name: 'account-info', 
+        .state('account-info', { 
+            url: '/account/info',
             activetab: 'account',
-            templateUrl: directory.user + 'info.html', 
+            templateUrl: directory.user + 'info.html',
             controller: 'userController',
             data: {
               authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor, USER_ROLES.guest]
             }
         })
-        .when('/shop', { 
-            name: 'shop', 
+        .state('shop', { 
+            url: '/shop',
             activetab: 'shop',
             templateUrl: directory.shop + 'shop.html', 
             controller: 'shopController',
@@ -100,8 +96,8 @@ var app = angular.module('app', [
               authorizedRoles: [USER_ROLES.all]
             }
         })
-        .when('/product/:productID', { 
-            name: 'product', 
+        .state('product', { 
+            url: '/product/:productID',
             activetab: 'shop',
             templateUrl: directory.shop + 'product.html', 
             controller: 'shopController',
@@ -109,7 +105,8 @@ var app = angular.module('app', [
               authorizedRoles: [USER_ROLES.all]
             }
         })
-        .when('/cart', { 
+        .state('cart', { 
+            url: '/cart',
             templateUrl: directory.shop + 'cart.html', 
             activetab: 'shop',
             controller: 'shopController',
@@ -117,18 +114,13 @@ var app = angular.module('app', [
               authorizedRoles: [USER_ROLES.all]
             }
         })
-        .when('/checkout', { 
+        .state('checkout', { 
+            url: '/checkout',
             templateUrl: directory.shop + 'checkout.html', 
             activetab: 'shop',
             controller: 'shopController',
             data: {
               authorizedRoles: [USER_ROLES.guest]
-            }
-        })
-        .otherwise({ 
-            redirectTo: '/index',
-            data: {
-              authorizedRoles: [USER_ROLES.all]
             }
         });
 }])
@@ -143,7 +135,7 @@ var app = angular.module('app', [
 })
 
 .run(function ($rootScope, $location, AUTH_EVENTS, USER_ROLES, auth) {
-  $rootScope.$on('$routeChangeStart', function (event, next) {
+  $rootScope.$on('$stateChangeStart', function (event, next) {
     var postLogInRoute;
     var authorizedRoles = next.data.authorizedRoles;
     // Allow "all" routes to continue 
@@ -207,7 +199,7 @@ app.controller ('myCtrl', [
     '$rootScope', 
     '$scope', 
     '$http', 
-    '$route', 
+    '$state', 
     '$location',
     'ngCart', 
     'USER_ROLES', 
@@ -222,7 +214,7 @@ app.controller ('myCtrl', [
     $rootScope, 
     $scope, 
     $http, 
-    $route, 
+    $state, 
     $location,
     ngCart, 
     USER_ROLES, 
@@ -235,7 +227,7 @@ app.controller ('myCtrl', [
     playerService
     ) {
 
-    $scope.$route = $route;
+    $scope.$state = $state;
 
     ngCart.setTaxRate(0);
     ngCart.setShipping(0);

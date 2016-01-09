@@ -13,8 +13,8 @@ angular.module('app.auth.controller', [
 .controller('authController', [
     '$scope',
     '$rootScope',
-    '$route',
-    '$routeParams',
+    '$state',
+    '$stateParams',
     '$location',
     '$window',
     'lodash',
@@ -27,8 +27,8 @@ angular.module('app.auth.controller', [
     function ( 
         $scope,
         $rootScope,
-        $route,
-        $routeParams,
+        $state,
+        $stateParams,
         $location,
         $window,
         _,

@@ -14,9 +14,9 @@ angular.module('app.shop.controller', [
 
 .controller('shopController', [
     '$scope',
-    '$route',
+    '$state',
     '$rootScope',
-    '$routeParams',
+    '$stateParams',
     '$window',
     'lodash',
     'globals',
@@ -27,9 +27,9 @@ angular.module('app.shop.controller', [
     'StripeJS',
     function ( 
         $scope,
-        $route,
+        $state,
         $rootScope,
-        $routeParams,
+        $stateParams,
         $window,
         _,
         globals,
@@ -79,15 +79,15 @@ angular.module('app.shop.controller', [
     });
 
     function init () {
-        if ($routeParams.productID) {
-            $scope.ViewData.productID = $routeParams.productID;
+        if ($stateParams.productID) {
+            $scope.ViewData.productID = $stateParams.productID;
         }
-        if ($route.current.$$route.name == 'shop') {
+        if ($state.current.name == 'shop') {
             getProducts();
         }
-        if ($route.current.$$route.name == 'product') {
-            getProducts($routeParams.productID);
-            getTracks($routeParams.productID);
+        if ($state.current.name == 'product') {
+            getProducts($stateParams.productID);
+            getTracks($stateParams.productID);
         }
     };
 
